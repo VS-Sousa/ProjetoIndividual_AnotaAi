@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./assets/img/logo.png" type="image/x-icon">
+    <title>Anota Ai!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Yellowtail&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./assets/js/validations.js"></script>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar container">
+            <a class="logo" href="./index.html">
+                <img src="./assets/img/logo.png" alt="Anota Aí! Logo">
+                Anota Aí!         
+            </a>
+            <nav class="navbar">
+                <a href="" id="aProject" class="link">
+                    Projeto
+                </a>
+                <a href="./creator.html" id="aCreator" class="link">
+                    Criador
+                </a>
+            </nav>
+            <nav class="navbar nav-auth">
+                <a href="./sign-in.html" class="btn-link-auth">
+                    Login
+                </a>
+                <a href="./sign-up.html" class="btn-link-auth selected">
+                    Cadastro
+                </a>
+            </nav>
+        </nav>
+    </header>
+    <main class="main sign-up">
+        <section class="banner">
+            <div class="container">
+                <div class="card form">
+                    <div class="heading-underline">
+                        <h1>Cadastro</h1>
+                    </div>
+                    <div class="fields">
+                        <div class="field">
+                            <label for="txtName">Nome:</label>
+                            <input id="txtName" type="text" placeholder="Ex: Ariel Marques">
+                        </div>
+                        <div class="field">
+                            <label for="txtEmail">Email:</label>
+                            <input id="txtEmail" type="email" placeholder="Ex: ariel.marques@email.com">
+                        </div>
+                        <div class="field">
+                            <label for="txtNickname">Apelido:</label>
+                            <input id="txtNickname" type="text" placeholder="Ex: ariel.marques404">
+                        </div>
+                        <div class="field">
+                            <label for="txtPassword">Senha:</label>
+                            <input id="txtPassword" type="password" placeholder="Ex: ********">
+                        </div>
+                    </div>
+                    <div>
+                        <button id="btnSignUp" class="btn-send" onclick="signUp()">Cadastrar</button>
+                    </div>
+                </div>                
+            </div>
+        </section>
+    </main>
+</body>
+</html>
+<script>
+    function signUp() {
+        var nameVar = txtName.value;
+        var emailVar = txtEmail.value;
+        var nicknameVar = txtNickname.value;
+        var passwordVar = txtPassword.value;
+
+        if (
+            nameVar == ''
+            || nicknameVar == ''
+            || passwordVar == ''
+        ) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Todos os campos são obrigatórios!',
+            });
+            return;
+        }
+
+        var emailValidation = validateEmail(emailVar);
+
+        if (emailValidation != 'OK') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: emailValidation,
+            });
+            return;
+        }
+
+        if (passwordVar.length < 8) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Senha deve ter no minímo 8 caracteres',
+            });
+            return;
+        }
+
+        fetch('/users/sign-up', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nameServer: nameVar,
+                emailServer: emailVar,
+                nicknameServer: nicknameVar,
+                passwordServer: passwordVar
+            })
+        }).then(response => {
+            if (response.ok) {
+                Swal.fire({
+                    title: 'Sucesso!',
+                    text: 'Cadastro realizado com sucesso',
+                    icon: 'success',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    willClose: () => {
+                        // window.location = './sign-in.html';
+                    }
+                });
+                return;
+            } else {
+                if (response.status == 403) {
+                    resposta.text().then(text => {
+                        Swal.fire({
+                            title: 'Erro',
+                            text: text,
+                            icon: 'error',
+                        });
+                        return;
+                    })
+                } else {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: 'Houve um erro ao realizar o cadastro!',
+                        icon: 'error',
+                    });
+                    throw ('Houve um erro ao realizar o cadastro!');
+                }
+            }
+        }).catch(error => {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao realizar o cadastro!',
+                icon: 'error',
+            });
+            console.log(`ERRO: ${erro}`);
+        })
+    }
+</script>
