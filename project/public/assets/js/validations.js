@@ -31,3 +31,21 @@ function validateEmail(email) {
     
     return result;
 }
+
+function validateNickname(nickname) {
+    var result = 'OK';
+
+    if (nickname == undefined) {
+        result = 'Apelido é indefinido';
+    } else if (nickname == '') {
+        result = 'Apelido é obrigatório';
+    } else {
+        var hasAt = nickname.includes('@');
+        
+        if (hasAt) {
+            result = "Apelido não pode conter '@'";
+        }
+    }
+
+    return result;
+}

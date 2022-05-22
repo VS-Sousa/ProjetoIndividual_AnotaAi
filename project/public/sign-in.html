@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="./assets/img/logo.png" type="image/x-icon">
-    <title>Anota Ai!</title>
+    <title>Anota Aí!</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Yellowtail&display=swap" rel="stylesheet">
@@ -29,34 +29,26 @@
                 </a>
             </nav>
             <nav class="navbar nav-auth">
-                <a href="./sign-in.html" class="btn-link-auth">
+                <a href="./sign-in.html" class="btn-link-auth selected">
                     Login
                 </a>
-                <a href="./sign-up.html" class="btn-link-auth selected">
+                <a href="./sign-up.html" class="btn-link-auth">
                     Cadastro
                 </a>
             </nav>
         </nav>
     </header>
-    <main class="main sign-up">
+    <main class="main sign-in">
         <section class="banner">
             <div class="container">
                 <div class="card form">
                     <div class="heading-underline">
-                        <h1>Cadastro</h1>
+                        <h1>Login</h1>
                     </div>
                     <div class="fields">
                         <div class="field">
-                            <label for="txtName">Nome:</label>
-                            <input id="txtName" type="text" placeholder="Ex: Ariel Marques">
-                        </div>
-                        <div class="field">
-                            <label for="txtEmail">Email:</label>
-                            <input id="txtEmail" type="email" placeholder="Ex: ariel.marques@email.com">
-                        </div>
-                        <div class="field">
-                            <label for="txtNickname">Apelido:</label>
-                            <input id="txtNickname" type="text" placeholder="Ex: ariel.marques404">
+                            <label for="txtUser">Email ou Apelido:</label>
+                            <input id="txtUser" type="text" placeholder="Email ou Apelido">
                         </div>
                         <div class="field">
                             <label for="txtPassword">Senha:</label>
@@ -64,7 +56,7 @@
                         </div>
                     </div>
                     <div>
-                        <button id="btnSignUp" class="btn-send" onclick="signUp()">Cadastrar</button>
+                        <button id="btnSignIn" class="btn-send" onclick="signIn()">Cadastrar</button>
                     </div>
                 </div>                
             </div>
@@ -73,95 +65,108 @@
 </body>
 </html>
 <script>
-    function signUp() {
-        var nameVar = txtName.value;
-        var emailVar = txtEmail.value;
-        var nicknameVar = txtNickname.value;
+    function signIn() {
+        var userVar = txtUser.value;
         var passwordVar = txtPassword.value;
 
-        if (
-            nameVar == ''
-            || nicknameVar == ''
-            || passwordVar == ''
-        ) {
+        if (passwordVar == '') {
             Swal.fire({
                 icon: 'error',
                 title: 'Erro',
                 text: 'Todos os campos são obrigatórios!',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
             });
             return;
         }
 
-        var emailValidation = validateEmail(emailVar);
+        var usingEmail = userVar.includes('@');
 
-        if (emailValidation != 'OK') {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erro',
-                text: emailValidation,
-            });
-            return;
+        if (usingEmail) {
+            var emailValidation = validateEmail(userVar);
+
+            if (emailValidation != 'OK') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: emailValidation,
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                return;
+            }
+
+        } else {
+            var nicknameValidation = validateNickname(userVar);
+
+            if (nicknameValidation != 'OK') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: nicknameValidation,
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                return;
+            }
         }
 
-        if (passwordVar.length < 8) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erro',
-                text: 'Senha deve ter no minímo 8 caracteres',
-            });
-            return;
-        }
-
-        fetch('/users/sign-up', {
+        fetch('/users/sign-in', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                nameServer: nameVar,
-                emailServer: emailVar,
-                nicknameServer: nicknameVar,
+                userServer: userVar,
                 passwordServer: passwordVar
             })
         }).then(response => {
             if (response.ok) {
-                Swal.fire({
-                    title: 'Sucesso!',
-                    text: 'Cadastro realizado com sucesso',
-                    icon: 'success',
-                    timer: 2000,
-                    timerProgressBar: true,
-                    willClose: () => {
-                        // window.location = './sign-in.html';
-                    }
+                response.json().then(json => {
+                    console.log(json);
+
+                    sessionStorage.USUARIO = JSON.stringify(json);
+                    
+                    Swal.fire({
+                        title: 'Suceso',
+                        text: 'Login realizado com sucesso',
+                        icon: 'success',
+                        timer: 2000,
+                        timerProgressBar: true,
+                        confirmButtonColor: '#6BF178',
+                        willClose: () => {
+                            window.location.replace('./auth/index.html');
+                        }
+                    });
                 });
-                return;
-            } else {
-                if (response.status == 403) {
-                    resposta.text().then(text => {
-                        Swal.fire({
-                            title: 'Erro',
-                            text: text,
-                            icon: 'error',
-                        });
-                        return;
-                    })
-                } else {
+            } else if (response.status == 403) {
+                response.text().then(errorMessage => {
                     Swal.fire({
                         title: 'Erro',
-                        text: 'Houve um erro ao realizar o cadastro!',
+                        text: errorMessage,
                         icon: 'error',
+                        showConfirmButton: false,
+                        showDenyButton: true,
+                        denyButtonText: 'OK'
                     });
-                    throw ('Houve um erro ao realizar o cadastro!');
-                }
+                    throw new Error(errorMessage);  
+                });
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao realizar o login!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                throw new Error('Houve um erro ao realizar o login!');
             }
         }).catch(error => {
-            Swal.fire({
-                title: 'Erro',
-                text: 'Houve um erro ao realizar o cadastro!',
-                icon: 'error',
-            });
-            console.log(`ERRO: ${erro}`);
-        })
+            console.log(`ERRO: `, error);
+        });
     }
 </script>
