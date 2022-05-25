@@ -22,8 +22,8 @@ var mySqlConfig = {
     host: "localhost",
     port: 3306,
     database: "dbAnotaAi",
-    user: "SEU_USUARIO",
-    password: "SUA_SENHA",
+    user: "root",
+    password: "docker",
 };
 
 function executar(instrucao) {

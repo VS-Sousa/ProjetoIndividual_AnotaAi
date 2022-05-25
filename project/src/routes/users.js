@@ -11,4 +11,8 @@ router.post("/sign-in", function (request, response) {
     userController.signIn(request, response);
 });
 
+router.put("/:idUser", function (request, response) {
+    userController.updateUser(request, response);
+});
+
 module.exports = router;

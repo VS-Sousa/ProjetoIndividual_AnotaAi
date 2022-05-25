@@ -22,7 +22,31 @@ function authenticateUser(user, password) {
     return database.executar(query);
 }
 
+function updateUser(idUser, newName, newEmail, newNickname) {
+    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function updateUser():", idUser, newName, newEmail, newNickname);
+
+    var query = `
+        UPDATE Usuario SET nome = '${newName}', email = '${newEmail}', apelido = '${newNickname}' WHERE idUsuario = ${idUser};
+    `;
+
+    console.log('Executando a query: \n', query)
+    return database.executar(query);
+}
+
+function findById(idUser) {
+    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function findById():", idUser);
+
+    var query = `
+        SELECT * FROM Usuario WHERE idUsuario = ${idUser};
+    `;
+
+    console.log('Executando a query: \n', query)
+    return database.executar(query);
+}
+
 module.exports = {
     createUser,
-    authenticateUser
+    authenticateUser,
+    updateUser,
+    findById
 }

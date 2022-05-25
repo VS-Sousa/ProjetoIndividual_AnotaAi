@@ -64,7 +64,45 @@ function signIn(request, response) {
     }
 }
 
+function updateUser(request, response) {
+    var idUser = request.params.idUser;
+    var newName = request.body.newNameServer;
+    var newEmail = request.body.newEmailServer;
+    var newNickname = request.body.newNicknameServer;
+
+    if (idUser == undefined) {
+        response.status(403).send('Id do Usuário está indefinido')
+    } else if (newName == undefined) {
+        response.status(403).send('Novo nome está indefinido')
+    } else if (newEmail == undefined) {
+        response.status(403).send('Novo email está indefinido')
+    } else if (newNickname == undefined) {
+        response.status(403).send('Novo apelido está indefinido')
+    } else {
+        userModel.updateUser(idUser, newName, newEmail, newNickname).then(result => {
+            var hasUpdated = result.affectedRows;
+
+            if (hasUpdated != 1) {
+                throw new Error('Houve um erro ao atualizar o usuário');
+            }
+
+            userModel.findById(idUser).then(updatedUser => {
+                response.json(updatedUser[0]);
+            }).catch(error => {
+                console.log(error);
+                console.log("\nHouve um erro ao realizar o cadastro! Erro: ", error.sqlMessage);
+                response.status(500).json(error.sqlMessage);
+            });
+        }).catch(error => {
+            console.log(error);
+            console.log("\nHouve um erro ao realizar o cadastro! Erro: ", error.sqlMessage);
+            response.status(500).json(error.sqlMessage);
+        });
+    }
+}
+
 module.exports = {
     signUp,
-    signIn
+    signIn,
+    updateUser
 }

@@ -288,7 +288,8 @@ span.fav-movie {
 
 .sign-up .container, 
 .sign-in .container,
-.my-list .container {
+.my-list .container,
+.my-account .container {
     height: 100%;
     justify-content: center;
     align-items: center;
@@ -296,7 +297,8 @@ span.fav-movie {
 
 .sign-up .card,
 .sign-in .card,
-.my-list .card {
+.my-list .card,
+.my-account .card {
     padding: 22px;
 }
 
@@ -324,7 +326,8 @@ span.fav-movie {
     border-bottom: 4px solid var(--screamin-green);
 }
 
-.sign-up .heading-underline {
+.sign-up .heading-underline,
+.my-account .heading-underline {
     border-bottom: 4px solid var(--blue-jeans);
 }
 
@@ -356,20 +359,24 @@ span.fav-movie {
     padding-left: 10px;
 }
 
-.sign-up .form .field input {
+.sign-up .form .field input, 
+.my-account .form #divUpdateUserFields .field input {
     border: 2px solid var(--blue-jeans);
 }
 
-.sign-up .form .field input:focus {
+.sign-up .form .field input:focus, 
+.my-account .form #divUpdateUserFields .field input:focus {
     outline: 1px solid var(--blue-jeans-outline);
     border: 2px solid var(--blue-jeans);
 }
 
-.sign-in .form .field input {
+.sign-in .form .field input, 
+.my-account .form #divChangePasswordFields .field input {
     border: 2px solid var(--screamin-green);
 }
 
-.sign-in .form .field input:focus {
+.sign-in .form .field :focus, 
+.my-account .form #divChangePasswordFields .field :focus {
     outline: 1px solid var(--screamin-green-outline);
     border: 2px solid var(--screamin-green);
 }
@@ -384,21 +391,25 @@ span.fav-movie {
     cursor: pointer;
 }
 
-#btnSignUp {
+#btnSignUp,
+#btnUpdateUser {
     background-color: var(--blue-jeans);
     border: 2px solid var(--blue-jeans);
 }
 
-#btnSignUp:focus {
+#btnSignUp:focus,
+#btnUpdateUser:focus {
     outline: 3px solid var(--blue-jeans-outline);
 }
 
-#btnSignIn {
+#btnSignIn,
+#btnChangePassword {
     background-color: var(--screamin-green);
     border: 2px solid var(--screamin-green);
 }
 
-#btnSignIn:focus {
+#btnSignIn:focus,
+#btnChangePassword:focus {
     outline: 3px solid var(--screamin-green-outline);
 }
 
@@ -545,7 +556,7 @@ span.fav-movie {
 .organizer .list .list-item {
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 60px;
+    grid-template-columns: 1fr 1fr 1fr 80px 60px;
     text-align: left;
     margin-bottom: 15px;
     column-gap: 10px;
@@ -559,7 +570,7 @@ span.fav-movie {
 .my-list .organizer .list .list-item {
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 60px 1fr;
+    grid-template-columns: 1fr 1fr 1fr 80px 60px 1fr;
     text-align: left;
     margin-bottom: 20px;
     column-gap: 10px;
@@ -573,6 +584,7 @@ span.fav-movie {
     background-image: url('../img/banner.svg');
     width: 100%;
     height: fit-content;
+    min-height: calc(100vh - 160px);
     padding: 30px 0;
     background-size: cover;
     background-repeat: repeat-y;
@@ -593,4 +605,16 @@ span.fav-movie {
     color: var(--fiery-rose);
     text-decoration: none;
     font-weight: bold;
+}
+
+#btnUpdateUser {
+    margin-top: 20px;
+}
+
+#divChangePasswordH1 {
+    margin-top: 35px;
+}
+
+#divChangePasswordH1 {
+    border-bottom: 4px solid var(--screamin-green);
 }
