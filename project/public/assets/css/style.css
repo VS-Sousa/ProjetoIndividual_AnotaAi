@@ -289,7 +289,8 @@ span.fav-movie {
 .sign-up .container, 
 .sign-in .container,
 .my-list .container,
-.my-account .container {
+.my-account .container,
+.explore .container {
     height: 100%;
     justify-content: center;
     align-items: center;
@@ -298,7 +299,8 @@ span.fav-movie {
 .sign-up .card,
 .sign-in .card,
 .my-list .card,
-.my-account .card {
+.my-account .card,
+.explore .card {
     padding: 22px;
 }
 
@@ -617,4 +619,88 @@ span.fav-movie {
 
 #divChangePasswordH1 {
     border-bottom: 4px solid var(--screamin-green);
+}
+
+/* Explorar */
+
+.explore .card {
+    width: 100%;
+    align-items: flex-start;
+}
+
+.explorer {
+    margin-top: 20px;
+    display: flex;
+    width: 100%;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.explorer .item-card {
+    display: flex;
+    width: 26%;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    padding-bottom: 4px;
+    cursor: pointer;
+}
+
+.item-card .photo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    width: 70%;
+    height: 150px;
+}
+
+.item-card .photo img {
+    height: 100px;
+    color: white;
+}
+
+.item-card h2 {
+    font-size: 18px;
+    margin: 15px 0 10px;
+    color: white;
+}
+
+.item-card h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.item-card p {
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: white;
+}
+
+.item-card.book {
+    background: linear-gradient(var(--screamin-green), #14E128);
+}
+
+.item-card.book .photo {
+    background-color: #14E128;
+}
+
+.item-card.music {
+    background: linear-gradient(var(--fiery-rose), #FF0A1B);
+}
+
+.item-card.music .photo {
+    background-color: #FF0A1B;
+}
+
+.item-card.movie {
+    background: linear-gradient(var(--blue-jeans), #0074CC);
+}
+
+.item-card.movie .photo {
+    background-color: #0074CC;
 }
