@@ -236,19 +236,19 @@ body {
     font-size: 18px;
 }
 
-.card.content p .books {
+.book {
+    color: var(--screamin-green);
     font-weight: 500;
-    color: var(--screamin-green)
 }
 
-.card.content p .movies {
+.movie {
+    color: var(--blue-jeans);
     font-weight: 500;
-    color: var(--blue-jeans)
 }
 
-.card.content p .music {
+.music {
+    color: var(--fiery-rose);
     font-weight: 500;
-    color: var(--fiery-rose)
 }
 
 .card.content p .brand {
@@ -310,7 +310,8 @@ span.fav-movie {
 .sign-in .card,
 .my-list .card,
 .my-account .card,
-.explore .card {
+.explore .card,
+.friends .card {
     padding: 22px;
 }
 
@@ -726,6 +727,7 @@ span.fav-movie {
     display: flex;
     width: 100%;
     justify-content: space-evenly;
+    margin-bottom: 20px;
 }
 
 .options .option {
@@ -753,8 +755,10 @@ span.fav-movie {
 
 .list.friends .list-item {
     display: grid;
+    width: 100%;
     grid-template-columns: 60px 1fr 1fr 1fr 1fr;
     column-gap: 10px;
+    margin-bottom: 10px;
 }
 
 .list.friends .list-item div {
@@ -768,6 +772,10 @@ span.fav-movie {
     display: flex;
     flex-direction: column;
     width: 100%;
+}
+
+.list.friends .list-item ul li {
+    margin-bottom: 8px;
 }
 
 .list.friends .list-item img {
