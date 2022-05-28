@@ -24,7 +24,7 @@
                     <img src="../assets/img/house-solid.svg" class="icon">
                     Dashboard
                 </a>
-                <a id="aList" href="./my-list.html" class="link selected">
+                <a id="aList" href="./my-list.html" class="link">
                     <img src="../assets/img/list-check-solid.svg" class="icon">
                     Lista
                 </a>
@@ -32,7 +32,7 @@
                     <img src="../assets/img/compass-regular.svg" class="icon">
                     Explorar
                 </a>
-                <a id="aFriends" href="./friends.html" class="link">
+                <a id="aFriends" href="./friends.html" class="link selected">
                     <img src="../assets/img/user-group-solid.svg" class="icon">
                     Amigos
                 </a>
@@ -47,35 +47,73 @@
             </nav>
         </nav>
     </header>
-    <main class="main my-list">
+    <main class="main friends">
         <section class="stretch-banner">
             <div class="container">
                 <div class="card content">
                     <div class="organizer">
-                        <div id="divMyListH1" class="heading-underline">
-                            <h1>Minha lista</h1>
+                        <div class="options">
+                            <button id="btnFriends" onclick="friends()" class="option selected">Amigos</button>
+                            <button id="btnRequests" onclick="requests()" class="option">Solicitações</button>
                         </div>
-                        <ul class="list">
-                            <li class="list-item">
-                                <div>Título</div>
-                                <div>Criador</div>
-                                <div>Gênero</div>
-                                <div>Tipo</div>
-                                <div>Status</div>
-                                <div>Opeções</div>
-                            </li>
-                            <li class="list-item">
-                                <div>CORSO</div>
-                                <div>Tyler, The Creator</div>
-                                <div>Rap</div>
-                                <div>Música</div>
-                                <img src="../assets/img/status-pending.svg" alt="">
-                                <div>
-                                    <a id="aRecommend" href="">Indicar</a>
-                                    <a id="aRemove" href="">Remover</a>
-                                </div>
-                            </li>
-                        </ul>
+
+                        <div id="divFriends" class="organizer">
+                            <ul class="list friends">
+                                <li class="list-item">
+                                    <div>Amigo</div>
+                                    <div>Apelido</div>
+                                    <div>Item</div>
+                                    <div>Preferência</div>
+                                    <div>Operações</div>
+                                </li>
+                                <li class="list-item">
+                                    <img src="../assets/img/circle-user-solid.svg">
+                                    <ul>
+                                        <li>Apelido</li>
+                                        <li>Nome</li>
+                                    </ul>
+                                    <div>Música</div>
+                                    <ul>
+                                        <li>Rock</li>
+                                        <li>Suspense</li>
+                                        <li>Drama</li>
+                                    </ul>
+                                    <div>
+                                        <a id="aRecommend" href="">Indicar</a>
+                                        <a id="aRemove" href="">Remover</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div id="divRequests" class="organizer">
+                            <ul class="list">
+                                <li class="list-item">
+                                    <div></div>
+                                    <div>Apelido</div>
+                                    <div>Item</div>
+                                    <div>Preferência</div>
+                                    <div>Operações</div>
+                                </li>
+                                <li class="list-item">
+                                    <img src="../assets/img/circle-user-solid.svg">
+                                    <ul>
+                                        <li>Apelido</li>
+                                        <li>Nome</li>
+                                    </ul>
+                                    <div>Música</div>
+                                    <ul>
+                                        <li>Rock</li>
+                                        <li>Suspense</li>
+                                        <li>Drama</li>
+                                    </ul>
+                                    <div>
+                                        <a id="aRecommend" href="">Aceitar</a>
+                                        <a id="aRemove" href="">Recusar</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -83,4 +121,20 @@
     </main>
 </body>
 </html>
-  
+<script>
+    function requests() {
+        btnFriends.classList.remove('selected');
+        divFriends.style.display = 'none';
+        
+        divRequests.style.display = 'flex';
+        btnRequests.classList.add('selected');
+    }
+
+    function friends() {
+        btnRequests.classList.remove('selected');
+        divRequests.style.display = 'none';
+        
+        divFriends.style.display = 'flex';
+        btnFriends.classList.add('selected');
+    }
+</script>

@@ -24,6 +24,16 @@ body {
     display: flex;
 }
 
+/* EFEITOS */
+::-webkit-scrollbar {
+    width: 4px;
+    background: #FFF;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--minion-yellow);
+}
+
 /* Header de navegação */
 
 .header {
@@ -543,7 +553,12 @@ span.fav-movie {
 }
 
 #divMyListH1 {
-    border-bottom: 4px solid var(--blue-jeans);
+    border-bottom: 4px solid var(--fiery-rose);
+    margin-bottom: 5px;
+}
+
+.dashboard #divMyListH1 {
+    border-bottom: 4px solid var(--minion-yellow);
     margin-bottom: 5px;
 }
 
@@ -555,18 +570,18 @@ span.fav-movie {
     margin-top: 10px;
 }
 
-.organizer .list .list-item {
+.list-item img {
+    margin: auto;
+    cursor: pointer;
+}
+
+.dashboard .organizer .list .list-item {
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 80px 60px;
     text-align: left;
     margin-bottom: 15px;
     column-gap: 10px;
-}
-
-.list-item img {
-    margin: auto;
-    cursor: pointer;
 }
 
 .my-list .organizer .list .list-item {
@@ -578,7 +593,8 @@ span.fav-movie {
     column-gap: 10px;
 }
 
-.my-list .organizer .list .list-item:first-of-type {
+.my-list .organizer .list .list-item:first-of-type,
+.friends .organizer .list .list-item:first-of-type {
     font-weight: bold;
 }
 
@@ -592,7 +608,8 @@ span.fav-movie {
     background-repeat: repeat-y;
 }
 
-.my-list .card.card.content {
+.my-list .card.card.content,
+.friends .card.card.content {
     width: 100%;
 }
 
@@ -629,17 +646,15 @@ span.fav-movie {
 }
 
 .explorer {
-    margin-top: 20px;
-    display: flex;
-    width: 100%;
-    flex-flow: row wrap;
-    align-items: center;
-    justify-content: space-evenly;
+    display: grid;
+    width: 90%;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 40px;
+    margin: 20px auto auto auto;
 }
 
 .explorer .item-card {
     display: flex;
-    width: 26%;
     flex-direction: column;
     align-items: center;
     border-radius: 20px;
@@ -703,4 +718,58 @@ span.fav-movie {
 
 .item-card.movie .photo {
     background-color: #0074CC;
+}
+
+/* Tela de amigos */
+
+.options {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+.options .option {
+    background-color: transparent;
+    border: 0;
+    padding: 2px 10px 6px;
+    border-bottom: 4px solid transparent;
+    color: var(--jet);
+    font-weight: bold;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+#btnFriends.option.selected {
+    border-bottom: 4px solid var(--minion-yellow);
+}
+
+#btnRequests.option.selected {
+    border-bottom: 4px solid var(--blue-jeans);
+}
+
+#divRequests {
+    display: none;
+}
+
+.list.friends .list-item {
+    display: grid;
+    grid-template-columns: 60px 1fr 1fr 1fr 1fr;
+    column-gap: 10px;
+}
+
+.list.friends .list-item div {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.list.friends .list-item ul {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.list.friends .list-item img {
+    height: 50px;
 }
