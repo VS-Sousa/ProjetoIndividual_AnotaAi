@@ -161,8 +161,6 @@ body {
     background-size: cover;
 }
 
-/* Banner em duas partes */
-
 .container.two-sides {
     height: 100%;
     justify-content: space-between;
@@ -299,8 +297,9 @@ span.fav-movie {
 .sign-up .container, 
 .sign-in .container,
 .my-list .container,
-.my-account .container,
-.explore .container {
+.edit-account .container,
+.explore .container,
+.my-account .container {
     height: 100%;
     justify-content: center;
     align-items: center;
@@ -309,9 +308,10 @@ span.fav-movie {
 .sign-up .card,
 .sign-in .card,
 .my-list .card,
-.my-account .card,
+.edit-account .card,
 .explore .card,
-.friends .card {
+.friends .card,
+.my-account .card {
     padding: 22px;
 }
 
@@ -340,7 +340,7 @@ span.fav-movie {
 }
 
 .sign-up .heading-underline,
-.my-account .heading-underline {
+.edit-account .heading-underline {
     border-bottom: 4px solid var(--blue-jeans);
 }
 
@@ -373,23 +373,23 @@ span.fav-movie {
 }
 
 .sign-up .form .field input, 
-.my-account .form #divUpdateUserFields .field input {
+.edit-account .form #divUpdateUserFields .field input {
     border: 2px solid var(--blue-jeans);
 }
 
 .sign-up .form .field input:focus, 
-.my-account .form #divUpdateUserFields .field input:focus {
+.edit-account .form #divUpdateUserFields .field input:focus {
     outline: 1px solid var(--blue-jeans-outline);
     border: 2px solid var(--blue-jeans);
 }
 
 .sign-in .form .field input, 
-.my-account .form #divChangePasswordFields .field input {
+.edit-account .form #divChangePasswordFields .field input {
     border: 2px solid var(--screamin-green);
 }
 
 .sign-in .form .field :focus, 
-.my-account .form #divChangePasswordFields .field :focus {
+.edit-account .form #divChangePasswordFields .field :focus {
     outline: 1px solid var(--screamin-green-outline);
     border: 2px solid var(--screamin-green);
 }
@@ -664,7 +664,7 @@ span.fav-movie {
     cursor: pointer;
 }
 
-.item-card .photo {
+.explorer .item-card .photo {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -673,51 +673,51 @@ span.fav-movie {
     height: 150px;
 }
 
-.item-card .photo img {
+.explorer .item-card .photo img {
     height: 100px;
     color: white;
 }
 
-.item-card h2 {
+.explorer .item-card h2 {
     font-size: 18px;
     margin: 15px 0 10px;
     color: white;
 }
 
-.item-card h3 {
+.explorer .item-card h3 {
     font-size: 14px;
     margin-bottom: 8px;
     color: white;
 }
 
-.item-card p {
+.explorer .item-card p {
     margin: 0;
     margin-bottom: 10px;
     font-size: 14px;
     color: white;
 }
 
-.item-card.book {
+.explorer .item-card.book {
     background: linear-gradient(var(--screamin-green), #14E128);
 }
 
-.item-card.book .photo {
+.explorer .item-card.book .photo {
     background-color: #14E128;
 }
 
-.item-card.music {
+.explorer .item-card.music {
     background: linear-gradient(var(--fiery-rose), #FF0A1B);
 }
 
-.item-card.music .photo {
+.explorer .item-card.music .photo {
     background-color: #FF0A1B;
 }
 
-.item-card.movie {
+.explorer .item-card.movie {
     background: linear-gradient(var(--blue-jeans), #0074CC);
 }
 
-.item-card.movie .photo {
+.explorer .item-card.movie .photo {
     background-color: #0074CC;
 }
 
@@ -741,11 +741,13 @@ span.fav-movie {
     cursor: pointer;
 }
 
-#btnFriends.option.selected {
+#btnFriends.option.selected,
+#btnFriends.option:hover {
     border-bottom: 4px solid var(--minion-yellow);
 }
 
-#btnRequests.option.selected {
+#btnRequests.option.selected,
+#btnRequests.option:hover {
     border-bottom: 4px solid var(--blue-jeans);
 }
 
@@ -780,4 +782,80 @@ span.fav-movie {
 
 .list.friends .list-item img {
     height: 50px;
+}
+
+/* Minha conta */
+
+#divMyAccountHeaderH1 {
+    border-bottom: 4px solid var(--blue-jeans);
+}
+
+.my-account .container {
+    flex-direction: column;
+}
+
+.my-account-header {
+    display: flex;
+    width: 80%;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px auto;
+}
+
+.my-account-header div {
+    display: flex;
+}
+
+.my-account-header img {
+    height: 80px;
+}
+
+.my-account-header ul {
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+}
+
+#divMyAccountStatsH1,
+.favorites .heading-underline,
+.chart-container .heading-underline {
+    border-bottom: 4px solid var(--minion-yellow);
+}
+
+#divStats {
+    margin-top: 40px;
+    width: 90%;
+}
+
+.favorites {
+    width: 100%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+
+.chart-container {
+    display: flex;
+    width: 80%;
+    margin: 0 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.favorites .two-sides {
+    display: grid;
+    grid-template-columns: 1fr 20%;
+    column-gap: 10%;
+    width: 80%;
+    margin-top: 20px;
+}
+
+.favorites .two-sides ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-weight: bold;
 }

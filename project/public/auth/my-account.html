@@ -5,20 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../assets/img/logo.png" type="image/x-icon">
-    <title>MINHA CONTA - AnotaAí!</title>
+    <title>EXPLORAR - AnotaAí!</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Yellowtail&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../assets/js/auth.js"></script>
-    <script src="../assets/js/validations.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body onload="verifyAuth(), loadUserData()">
+<body onload="verifyAuth()">
     <header class="header">
         <nav class="navbar container">
             <a class="logo" href="../index.html">
-                <img src="../assets/img/logo.png" alt="Anota Aí! Logo">
+                <img src="../assets/img/logo.png" alt="Anota Aí! Logo">                
                 Anota Aí!         
             </a>
             <nav class="navbar">
@@ -52,47 +52,82 @@
     <main class="main my-account">
         <section class="stretch-banner">
             <div class="container">
-                <div class="card form">                    
-                    <div id="divMyAccountH1" class="heading-underline">
-                        <h1>Dados pessoais</h1>
-                    </div>
-                    <div id="divUpdateUserFields" class="fields">
-                        <div class="field">
-                            <label for="txtName">Nome:</label>
-                            <input id="txtName" type="text" placeholder="Ex: Ariel Marques">
+                <div class="card content">
+                    <div class="organizer">
+                        <div id="divMyAccountHeaderH1" class="heading-underline">
+                            <h1>Minha Conta</h1>
                         </div>
-                        <div class="field">
-                            <label for="txtEmail">Email:</label>
-                            <input id="txtEmail" type="email" placeholder="Ex: ariel.marques@email.com">
-                        </div>
-                        <div class="field">
-                            <label for="txtNickname">Apelido:</label>
-                            <input id="txtNickname" type="text" placeholder="Ex: ariel.marques404">
-                        </div>                        
-                    </div>
-                    <div>
-                        <button id="btnUpdateUser" class="btn-send" onclick="updateUser()">Cadastrar</button>
-                    </div>
-
-                    <div id="divChangePasswordH1" class="heading-underline">
-                        <h1>Mudar Senha</h1>
-                    </div>
-                    <div id="divChangePasswordFields" class="fields">
-                        <div class="field">
-                            <label for="txtOldPassword">Senha atual:</label>
-                            <input id="txtOldPassword" type="password" placeholder="Ex: ********">
-                        </div>
-                        <div class="field">
-                            <label for="txtPassword">Nova senha:</label>
-                            <input id="txtPassword" type="password" placeholder="Ex: ********">
-                        </div>
-                        <div class="field">
-                            <label for="txtNewPassword">Confirmar senha:</label>
-                            <input id="txtNewPassword" type="password" placeholder="Ex: ********">
+                        <div class="my-account-header">
+                            <div>
+                                <img src="../assets/img/circle-user-solid.svg">
+                                <ul>
+                                    <li>Apelido</li>
+                                    <li>Nome</li>
+                                </ul>
+                            </div>
+                            <a class="btn-link-auth" href="./edit-account.html">Editar conta</a>
                         </div>
                     </div>
-                    <div>
-                        <button id="btnChangePassword" class="btn-send" onclick="changePassword()">Mudar senha</button>
+                </div>
+                <div id="divStats" class="card content">
+                    <div class="organizer">
+                        <div id="divMyAccountStatsH1" class="heading-underline">
+                            <h1>Estatísticas</h1>
+                        </div>
+                        <div class="chart-container">
+                            <div class="heading-underline">
+                                <h1>Histórico</h1>
+                            </div>
+                            <canvas id="chartHistory"></canvas>
+                        </div>
+                        <div class="favorites">
+                            <div class="heading-underline">
+                                <h1>Favoritos</h1>
+                            </div>
+                            <div class="explorer">
+                                <div class="item-card music" onclick="addItemToList({ titulo: 'Seigfried', criador: 'Frank Ocean' })">
+                                    <h3>Música</h3>
+                                    <div class="photo">
+                                        <img src="../assets/img/music.png" alt="Filme">
+                                    </div>
+                                    <h2>Seigfried</h2>
+                                    <p>Frank Ocean</p>
+                                    <p>Rap</p>
+                                </div>
+                                <div class="item-card book" onclick="addItemToList({ titulo: 'Orgulho e Preconceito', criador: 'Jane Austen' })">
+                                    <h3>Livro</h3>
+                                    <div class="photo">
+                                        <img src="../assets/img/livro.png" alt="Livro">
+                                    </div>
+                                    <h2>Orgulho e Preconceito</h2>
+                                    <p>Jane Austen</p>
+                                    <p>Romance de época</p>
+                                </div>
+                                <div class="item-card movie" onclick="addItemToList({ titulo: 'Taxi Driver', criador: 'Martin Scorcese' })">
+                                    <h3>Filme</h3>
+                                    <div class="photo">
+                                        <img src="../assets/img/clapperboard.png" alt="Filme">
+                                    </div>
+                                    <h2>Taxi Driver</h2>
+                                    <p>Martin Scorcese</p>
+                                    <p>Drama</p>
+                                </div>
+                            </div>
+                            <div class="heading-underline">
+                                <h1>Preferências</h1>
+                            </div>
+                            <div class="two-sides">
+                                <div>
+                                    <canvas id="chartTypes"></canvas>
+                                </div>
+                                <ul>
+                                    <li>Gêneros favoritos</li>
+                                    <li class="music">Rock</li>
+                                    <li class="book">Romance de época</li>
+                                    <li class="movie">Drama</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -101,126 +136,88 @@
 </body>
 </html>
 <script>
-    var respostaUpdate = {};
-
-    function loadUserData() {
-        txtName.value = user.nome;
-        txtEmail.value = user.email;
-        txtNickname.value = user.apelido;
-    }
-
-    function updateUser() {
-        var newNameVar = txtName.value;
-        var newEmailVar = txtEmail.value;
-        var newNicknameVar = txtNickname.value;
-
-        if (
-            newNameVar == user.nome
-            && newEmailVar == user.email
-            && newNicknameVar == user.nickname
-        ) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Aviso',
-                text: 'Para atualizar, algum campo tem que ser alterado',
-            });
-            return;
-        }
-
-        if (newNameVar == '') {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erro',
-                text: 'Todos os campos são obrigatórios!',
-                showConfirmButton: false,
-                showDenyButton: true,
-                denyButtonText: 'OK'
-            });
-            txtName.value = user.nome;
-            return;
-        }
-
-        var emailValidation = validateEmail(newEmailVar);
-        var nicknameValidation = validateNickname(newNicknameVar);
-
-        if (emailValidation != 'OK') {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erro',
-                text: emailValidation,
-                showConfirmButton: false,
-                showDenyButton: true,
-                denyButtonText: 'OK'
-            });
-            return;
-        }
-
-        if (nicknameValidation != 'OK') {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erro',
-                text: nicknameValidation,
-                showConfirmButton: false,
-                showDenyButton: true,
-                denyButtonText: 'OK'
-            });
-            return;
-        }
-
-        fetch(`/users/${user.idUsuario}`, {
-            method: 'PUT',
-            headers: {
-                "Content-Type": "application/json"
+    const historyChartLabels = ['Março','Abril','Maio','Junho','Julho','Agosto'];
+    const historyChartData = {
+        labels: historyChartLabels,
+        datasets: [
+            {
+                label: 'Pendente',
+                data: [10,15,20,21,17,8],
+                borderColor: '#FF5964',
+                backgroundColor: '#FF5964'
             },
-            body: JSON.stringify({
-                newNameServer: newNameVar,
-                newEmailServer: newEmailVar,
-                newNicknameServer: newNicknameVar,
-            })
-        }).then(response => {
-            if (response.ok) {
-                response.json().then(json => {
-                    console.log(json);
-
-                    sessionStorage.USUARIO = JSON.stringify(json);
-                    user = json;
-                    loadUserData();
-                    
-                    Swal.fire({
-                        title: 'Suceso',
-                        text: 'Atualização realizada com sucesso',
-                        icon: 'success',
-                        timer: 2000,
-                        timerProgressBar: true,
-                        confirmButtonColor: '#6BF178',
-                    });
-                    return;
-                })
-            } else if (response.status == 403) {
-                response.text().then(errorMessage => {
-                    Swal.fire({
-                        title: 'Erro',
-                        text: errorMessage,
-                        icon: 'error',
-                        showConfirmButton: false,
-                        showDenyButton: true,
-                        denyButtonText: 'OK'
-                    });
-                    throw new Error(errorMessage);  
-                })
-            } else {
-                Swal.fire({
-                    title: 'Erro',
-                    text: 'Houve um erro ao realizar o cadastro!',
-                    icon: 'error',
-                    showConfirmButton: false,
-                    showDenyButton: true,
-                    denyButtonText: 'OK'
-                });
-                throw new Error('Houve um erro ao realizar o cadastro!');
+            {
+                label: 'Progresso',
+                data: [8,6,7,2,1,9],
+                borderColor: '#FFE74C',
+                backgroundColor: '#FFE74C'
+            },
+            {
+                label: 'Concluido',
+                data: [3,5,4,8,2,1],
+                borderColor: '#6BF178',
+                backgroundColor: '#6BF178'
             }
-        }).catch(error => {
-            console.log(`ERRO: `, error);
-        })
+        ]
     }
+
+    const historyChartConfig = {
+        type: 'line',
+        data: historyChartData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    }
+
+    const historyChart = new Chart(
+        document.getElementById('chartHistory'),
+        historyChartConfig
+    )
+
+    const typesChartData = {
+        labels: ['Tipos'],
+        datasets: [
+            {
+                label: 'Música',
+                data: [10],
+                borderColor: '#FF5964',
+                backgroundColor: '#FF5964'
+            },
+            {
+                label: 'Livro',
+                data: [15],
+                borderColor: '#6BF178',
+                backgroundColor: '#6BF178'
+            },
+            {
+                label: 'Filme',
+                data: [20],
+                borderColor: '#35A7FF',
+                backgroundColor: '#35A7FF'
+            }
+        ]
+    }
+
+    const typesChartConfig = {
+        type: 'bar',
+        data: typesChartData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    }
+
+    const typesChart = new Chart(
+        document.getElementById('chartTypes'),
+        typesChartConfig
+    )
 </script>

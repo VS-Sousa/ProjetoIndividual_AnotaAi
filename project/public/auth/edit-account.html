@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../assets/img/logo.png" type="image/x-icon">
+    <title>MINHA CONTA - AnotaAí!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Yellowtail&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/validations.js"></script>
+</head>
+<body onload="verifyAuth(), loadUserData()">
+    <header class="header">
+        <nav class="navbar container">
+            <a class="logo" href="../index.html">
+                <img src="../assets/img/logo.png" alt="Anota Aí! Logo">
+                Anota Aí!         
+            </a>
+            <nav class="navbar">
+                <a id="aDashboard" href="./index.html" class="link">
+                    <img src="../assets/img/house-solid.svg" class="icon">
+                    Dashboard
+                </a>
+                <a id="aList" href="./my-list.html" class="link">
+                    <img src="../assets/img/list-check-solid.svg" class="icon">
+                    Lista
+                </a>
+                <a id="aExplore" href="./explore.html" class="link">
+                    <img src="../assets/img/compass-regular.svg" class="icon">
+                    Explorar
+                </a>
+                <a id="aFriends" href="./friends.html" class="link">
+                    <img src="../assets/img/user-group-solid.svg" class="icon">
+                    Amigos
+                </a>
+            </nav>
+            <nav class="navbar nav-auth">
+                <a id="aMyAccount" href="./my-account.html" class="link">
+                    Minha Conta
+                </a>
+                <a id="aBtnLogOut" href="" onclick="signOut()" class="btn-link-auth">
+                    Sair
+                </a>
+            </nav>
+        </nav>
+    </header>
+    <main class="main edit-account">
+        <section class="stretch-banner">
+            <div class="container">
+                <div class="card form">                    
+                    <div id="divMyAccountH1" class="heading-underline">
+                        <h1>Dados pessoais</h1>
+                    </div>
+                    <div id="divUpdateUserFields" class="fields">
+                        <div class="field">
+                            <label for="txtName">Nome:</label>
+                            <input id="txtName" type="text" placeholder="Ex: Ariel Marques">
+                        </div>
+                        <div class="field">
+                            <label for="txtEmail">Email:</label>
+                            <input id="txtEmail" type="email" placeholder="Ex: ariel.marques@email.com">
+                        </div>
+                        <div class="field">
+                            <label for="txtNickname">Apelido:</label>
+                            <input id="txtNickname" type="text" placeholder="Ex: ariel.marques404">
+                        </div>                        
+                    </div>
+                    <div>
+                        <button id="btnUpdateUser" class="btn-send" onclick="updateUser()">Cadastrar</button>
+                    </div>
+
+                    <div id="divChangePasswordH1" class="heading-underline">
+                        <h1>Mudar Senha</h1>
+                    </div>
+                    <div id="divChangePasswordFields" class="fields">
+                        <div class="field">
+                            <label for="txtOldPassword">Senha atual:</label>
+                            <input id="txtOldPassword" type="password" placeholder="Ex: ********">
+                        </div>
+                        <div class="field">
+                            <label for="txtPassword">Nova senha:</label>
+                            <input id="txtPassword" type="password" placeholder="Ex: ********">
+                        </div>
+                        <div class="field">
+                            <label for="txtNewPassword">Confirmar senha:</label>
+                            <input id="txtNewPassword" type="password" placeholder="Ex: ********">
+                        </div>
+                    </div>
+                    <div>
+                        <button id="btnChangePassword" class="btn-send" onclick="changePassword()">Mudar senha</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
+<script>
+    var respostaUpdate = {};
+
+    function loadUserData() {
+        txtName.value = user.nome;
+        txtEmail.value = user.email;
+        txtNickname.value = user.apelido;
+    }
+
+    function updateUser() {
+        var newNameVar = txtName.value;
+        var newEmailVar = txtEmail.value;
+        var newNicknameVar = txtNickname.value;
+
+        if (
+            newNameVar == user.nome
+            && newEmailVar == user.email
+            && newNicknameVar == user.nickname
+        ) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Aviso',
+                text: 'Para atualizar, algum campo tem que ser alterado',
+            });
+            return;
+        }
+
+        if (newNameVar == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Todos os campos são obrigatórios!',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            txtName.value = user.nome;
+            return;
+        }
+
+        var emailValidation = validateEmail(newEmailVar);
+        var nicknameValidation = validateNickname(newNicknameVar);
+
+        if (emailValidation != 'OK') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: emailValidation,
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            return;
+        }
+
+        if (nicknameValidation != 'OK') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: nicknameValidation,
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            return;
+        }
+
+        fetch(`/users/${user.idUsuario}`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                newNameServer: newNameVar,
+                newEmailServer: newEmailVar,
+                newNicknameServer: newNicknameVar,
+            })
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(json => {
+                    console.log(json);
+
+                    sessionStorage.USUARIO = JSON.stringify(json);
+                    user = json;
+                    loadUserData();
+                    
+                    Swal.fire({
+                        title: 'Suceso',
+                        text: 'Atualização realizada com sucesso',
+                        icon: 'success',
+                        timer: 2000,
+                        timerProgressBar: true,
+                        confirmButtonColor: '#6BF178',
+                    });
+                    return;
+                })
+            } else if (response.status == 403) {
+                response.text().then(errorMessage => {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: errorMessage,
+                        icon: 'error',
+                        showConfirmButton: false,
+                        showDenyButton: true,
+                        denyButtonText: 'OK'
+                    });
+                    throw new Error(errorMessage);  
+                })
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao realizar o cadastro!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                throw new Error('Houve um erro ao realizar o cadastro!');
+            }
+        }).catch(error => {
+            console.log(`ERRO: `, error);
+        })
+    }
+</script>
