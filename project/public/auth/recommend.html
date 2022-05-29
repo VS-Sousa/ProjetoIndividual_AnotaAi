@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../assets/img/logo.png" type="image/x-icon">
+    <title>EXPLORAR - AnotaAí!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Yellowtail&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="../assets/js/auth.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body onload="verifyAuth()">
+    <header class="header">
+        <nav class="navbar container">
+            <a class="logo" href="../index.html">
+                <img src="../assets/img/logo.png" alt="Anota Aí! Logo">                
+                Anota Aí!         
+            </a>
+            <nav class="navbar">
+                <a id="aDashboard" href="./index.html" class="link">
+                    <img src="../assets/img/house-solid.svg" class="icon">
+                    Dashboard
+                </a>
+                <a id="aList" href="./my-list.html" class="link">
+                    <img src="../assets/img/list-check-solid.svg" class="icon">
+                    Lista
+                </a>
+                <a id="aExplore" href="./explore.html" class="link">
+                    <img src="../assets/img/compass-regular.svg" class="icon">
+                    Explorar
+                </a>
+                <a id="aFriends" href="./friends.html" class="link">
+                    <img src="../assets/img/user-group-solid.svg" class="icon">
+                    Amigos
+                </a>
+            </nav>
+            <nav class="navbar nav-auth">
+                <a id="aMyAccount" href="./my-account.html" class="link">
+                    Minha Conta
+                </a>
+                <a id="aBtnLogOut" href="" onclick="signOut()" class="btn-link-auth">
+                    Sair
+                </a>
+            </nav>
+        </nav>
+    </header>
+    <main class="main recommend">
+        <section class="stretch-banner">
+            <div class="container">
+                <div class="two-sides">
+                    <div class="card content">
+                        <div class="heading-underline">
+                            <h1>Amigo</h1>
+                        </div>
+                        <div>
+                            <select id="cmbFriends">
+                                <option value="">VS-Sousa | Vinícius Sousa</option>
+                            </select>
+                        </div>
+                        <div>
+                            <img src="../assets/img/circle-user-solid.svg">
+                        </div>
+                        <ul>
+                            <li>Nome</li>
+                            <li>Apelido</li>
+                            <li>Música</li>
+                            <li>Rock</li>
+                        </ul>
+                    </div>
+                    <div id="divBtnRecommend">
+                        <button id="btnRecommend">Anota Aí!</button>
+                    </div>
+                    <div class="card item">
+                        <div class="heading-underline">
+                            <h1>Item</h1>
+                        </div>
+                        <div>
+                            <select id="cmbItems">
+                                <option value="">VS-Sousa | Vinícius Sousa</option>
+                            </select>
+                        </div>
+                        <div class="item-card movie">
+                            <h3>Filme</h3>
+                            <div class="photo">
+                                <img src="../assets/img/clapperboard.png" alt="Filme">
+                            </div>
+                            <h2>Taxi Driver</h2>
+                            <p>Martin Scorcese</p>
+                            <p>Drama</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

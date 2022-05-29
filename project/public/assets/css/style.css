@@ -299,7 +299,8 @@ span.fav-movie {
 .my-list .container,
 .edit-account .container,
 .explore .container,
-.my-account .container {
+.my-account .container,
+.recommend .container {
     height: 100%;
     justify-content: center;
     align-items: center;
@@ -311,7 +312,8 @@ span.fav-movie {
 .edit-account .card,
 .explore .card,
 .friends .card,
-.my-account .card {
+.my-account .card,
+.recommend .card {
     padding: 22px;
 }
 
@@ -654,7 +656,8 @@ span.fav-movie {
     margin: 20px auto auto auto;
 }
 
-.explorer .item-card {
+.explorer .item-card,
+.recommend .item-card {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -664,7 +667,8 @@ span.fav-movie {
     cursor: pointer;
 }
 
-.explorer .item-card .photo {
+.explorer .item-card .photo,
+.recommend .item-card .photo {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -673,51 +677,61 @@ span.fav-movie {
     height: 150px;
 }
 
-.explorer .item-card .photo img {
+.explorer .item-card .photo img,
+.recommend .item-card .photo img {
     height: 100px;
     color: white;
 }
 
-.explorer .item-card h2 {
+.explorer .item-card h2,
+.recommend .item-card h2 {
     font-size: 18px;
     margin: 15px 0 10px;
     color: white;
 }
 
-.explorer .item-card h3 {
+.explorer .item-card h3, 
+.recommend .item-card h3 {
     font-size: 14px;
     margin-bottom: 8px;
     color: white;
 }
 
-.explorer .item-card p {
+.explorer .item-card p,
+.recommend .item-card p {
     margin: 0;
     margin-bottom: 10px;
     font-size: 14px;
     color: white;
 }
 
-.explorer .item-card.book {
+.explorer .item-card.book,
+.recommend .item-card.book {
     background: linear-gradient(var(--screamin-green), #14E128);
 }
 
-.explorer .item-card.book .photo {
+.explorer .item-card.book .photo,
+.recommend .item-card.book .photo {
     background-color: #14E128;
 }
 
-.explorer .item-card.music {
+.explorer .item-card.music,
+.recommend .item-card.music {
     background: linear-gradient(var(--fiery-rose), #FF0A1B);
 }
 
-.explorer .item-card.music .photo {
+.explorer .item-card.music .photo,
+.recommend .item-card.music .photo {
     background-color: #FF0A1B;
 }
 
-.explorer .item-card.movie {
+.explorer .item-card.movie,
+.recommend .item-card.movie {
     background: linear-gradient(var(--blue-jeans), #0074CC);
 }
 
-.explorer .item-card.movie .photo {
+.explorer .item-card.movie .photo,
+.recommend .item-card.movie .photo {
     background-color: #0074CC;
 }
 
@@ -858,4 +872,87 @@ span.fav-movie {
     flex-direction: column;
     align-items: flex-start;
     font-weight: bold;
+}
+
+/* Recomendar */
+
+.recommend .card.content {
+    width: 80%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.recommend .two-sides {
+    display: grid;
+    grid-template-columns: 1fr 20% 1fr;
+    column-gap: 10%;
+    width: 100%;
+}
+
+.recommend .card.content {
+    justify-content: flex-start;
+}
+
+.recommend .heading-underline {
+    border-bottom: 4px solid var(--minion-yellow);
+}
+
+.recommend .card.content img {
+    margin: 10px 0;
+    height: 80px;
+}
+
+.recommend .card.content ul {
+    display: flex;
+    flex-direction: column;
+}
+
+.recommend .card.content ul li {
+    margin-bottom: 10px;
+}
+
+.recommend .card.content ul li:nth-child(1) {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.recommend .card.content ul li:nth-child(2)  {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#cmbFriends, #cmbItems {
+    margin: 10px 0;
+}
+
+#divBtnRecommend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#btnRecommend {
+    padding: 8px 30px;
+    border-radius: 50px;
+    color: var(--minion-yellow);
+    font-size: 40px;
+    cursor: pointer;
+    background-color: white;
+    border: 4px solid var(--minion-yellow);
+    font-family: 'Yellowtail', cursive;
+}
+
+#btnRecommend:hover,
+#btnRecommend:focus {
+    color: white;
+    background-color: var(--minion-yellow);
+}
+
+.recommend .card.item {
+    align-items: center;
+}
+
+.recommend .item-card {
+    width: 100%;
+    margin-bottom: 10px;
 }
