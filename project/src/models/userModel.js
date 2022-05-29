@@ -44,9 +44,33 @@ function findById(idUser) {
     return database.executar(query);
 }
 
+function verifyPassword(idUser, password) {
+    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function findById():", idUser, password);
+
+    var query = `
+        SELECT * FROM Usuario WHERE idUsuario = ${idUser} AND senha = SHA2('${password}', 512);
+    `;
+
+    console.log('Executando a query: \n', query)
+    return database.executar(query);
+}
+
+function changePassword(idUser, newPassword) {
+    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function findById():", idUser, newPassword);
+
+    var query = `
+        UPDATE Usuario SET senha = SHA2('${newPassword}', 512) WHERE idUsuario = ${idUser};
+    `;
+
+    console.log('Executando a query: \n', query)
+    return database.executar(query);
+}
+
 module.exports = {
     createUser,
     authenticateUser,
     updateUser,
-    findById
+    findById,
+    verifyPassword,
+    changePassword
 }

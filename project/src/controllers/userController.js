@@ -101,8 +101,50 @@ function updateUser(request, response) {
     }
 }
 
+function changePassword(request, response) {
+    var idUser = request.params.idUser;
+    var password = request.body.passwordServer;
+    var newPassword = request.body.newPasswordServer;
+
+    if (idUser == undefined) {
+        response.status(403).send('Id do Usuário está indefinido')
+    } else if (password == undefined) {
+        response.status(403).send('Senha atual está indefinido')
+    } else if (newPassword == undefined) {
+        response.status(403).send('Nova senha está indefinido')
+    } else {
+        userModel.verifyPassword(idUser, password).then(result => {
+            if (result.length <= 0) {
+                response.status(403).json('Senha atual informada está incorreta');
+                throw new Error('Senha atual informada está incorreta');
+            }
+
+            userModel.changePassword(idUser, newPassword).then(_ => {
+                userModel.findById(idUser).then(updatedUser => {
+                    response.json(updatedUser[0]);
+                }).catch(error => {
+                    console.log(error);
+                    console.log("\nHouve um erro ao realizar o cadastro! Erro: ", error.sqlMessage);
+                    response.status(500).json(error.sqlMessage);
+                });
+
+            }).catch(error => {
+                console.log(error);
+                console.log("\nHouve um erro ao realizar o cadastro! Erro: ", error.sqlMessage);
+                response.status(500).json(error.sqlMessage);
+            });
+
+        }).catch(error => {
+            console.log(error);
+            console.log("\nHouve um erro ao realizar o cadastro! Erro: ", error.sqlMessage);
+            response.status(500).json(error.sqlMessage);
+        });
+    }
+}
+
 module.exports = {
     signUp,
     signIn,
-    updateUser
+    updateUser,
+    changePassword
 }

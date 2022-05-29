@@ -15,4 +15,8 @@ router.put("/:idUser", function (request, response) {
     userController.updateUser(request, response);
 });
 
+router.patch('/password/:idUser', function (request, response) {
+    userController.changePassword(request, response);
+});
+
 module.exports = router;

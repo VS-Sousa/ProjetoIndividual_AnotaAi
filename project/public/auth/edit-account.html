@@ -101,8 +101,6 @@
 </body>
 </html>
 <script>
-    var respostaUpdate = {};
-
     function loadUserData() {
         txtName.value = user.nome;
         txtEmail.value = user.email;
@@ -222,5 +220,94 @@
         }).catch(error => {
             console.log(`ERRO: `, error);
         })
+    }
+
+    function changePassword() {
+        var passwordVar = txtOldPassword.value;
+        var newPasswordVar = txtPassword.value;
+        var confirmPasswordVar = txtNewPassword.value;
+
+        if (
+            passwordVar == ''
+            || newPasswordVar == ''
+            || confirmPasswordVar == ''
+        ) {
+            Swal.fire({
+                    title: 'Erro',
+                    text: 'Todos os campos são obrigatórios',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+            return;
+        }
+
+        if (newPasswordVar != confirmPasswordVar) {
+            Swal.fire({
+                    title: 'Erro',
+                    text: 'A confimação de senha deve ser igual a nova senha',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+            return;
+        }
+
+        fetch(`/users/password/${user.idUsuario}`, {
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                passwordServer: passwordVar,
+                newPasswordServer: newPasswordVar
+            })
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(json => {
+                    console.log(json);
+
+                    sessionStorage.USUARIO = JSON.stringify(json);
+                    user = json;
+                    loadUserData();
+                    
+                    Swal.fire({
+                        title: 'Suceso',
+                        text: 'Atualização realizada com sucesso',
+                        icon: 'success',
+                        timer: 2000,
+                        timerProgressBar: true,
+                        confirmButtonColor: '#6BF178',
+                    });
+                    return;
+                })
+            } else if (response.status == 403) {
+                response.text().then(errorMessage => {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: errorMessage,
+                        icon: 'error',
+                        showConfirmButton: false,
+                        showDenyButton: true,
+                        denyButtonText: 'OK'
+                    });
+                    throw new Error(errorMessage);  
+                })
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao realizar o cadastro!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                throw new Error('Houve um erro ao realizar o cadastro!');
+            }
+        }).catch(error => {
+            console.log(`ERRO: `, error);
+        });
     }
 </script>
