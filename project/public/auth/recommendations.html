@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../assets/img/logo.png" type="image/x-icon">
+    <title>INDICAÇÕES - AnotaAí!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Yellowtail&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="../assets/js/auth.js"></script>
+</head>
+<body onload="verifyAuth()">
+    <header class="header">
+        <nav class="navbar container">
+            <a class="logo" href="./index.html">
+                <img src="../assets/img/logo.png" alt="Anota Aí! Logo">                
+                Anota Aí!         
+            </a>
+            <nav class="navbar">
+                <a id="aList" href="./my-list.html" class="link">
+                    <img src="../assets/img/list-check-solid.svg" class="icon">
+                    Lista
+                </a>
+                <a id="aExplore" href="./explore.html" class="link">
+                    <img src="../assets/img/compass-regular.svg" class="icon">
+                    Explorar
+                </a>
+                <a id="aFriends" href="./friends.html" class="link">
+                    <img src="../assets/img/user-group-solid.svg" class="icon">
+                    Amigos
+                </a>
+                <a id="aRecommendations" href="./recommendations.html" class="link selected">
+                    <img src="../assets/img/share-solid.svg" class="icon">
+                    Indicações
+                </a>
+            </nav>
+            <nav class="navbar nav-auth">
+                <a id="aMyAccount" href="./my-account.html" class="link">
+                    Minha Conta
+                </a>
+                <a id="aBtnLogOut" href="" onclick="signOut()" class="btn-link-auth">
+                    Sair
+                </a>
+            </nav>
+        </nav>
+    </header>
+    <main class="main recommendations">
+        <section class="stretch-banner">
+            <div class="container">
+                <div class="card content">
+                    <div class="organizer">
+                        <div class="title">
+                            <div id="divRecommendationsH1" class="heading-underline">
+                                <h1>Indicações</h1>
+                            </div>
+                            <a class="btn-link-auth" href="./recommend.html">Indicar</a>
+                        </div>
+                        <div class="recommendations-grid">
+                            <div class="recommendation">
+                                <div class="user">
+                                    <h2>Apelido</h2>
+                                    <p>Recomendou para você</p>
+                                </div>
+                                <div class="item-card movie">
+                                    <h3>Filme</h3>
+                                    <div class="photo">
+                                        <img src="../assets/img/clapperboard.png" alt="Filme">
+                                    </div>
+                                    <h2>Taxi Driver</h2>
+                                    <p>Martin Scorcese</p>
+                                    <p>Drama</p>
+                                </div>
+                            </div>
+                            <div class="recommendation">
+                                <div class="user">
+                                    <h2>Apelido</h2>
+                                    <p>Recomendou para você</p>
+                                </div>
+                                <div class="item-card movie">
+                                    <h3>Filme</h3>
+                                    <div class="photo">
+                                        <img src="../assets/img/clapperboard.png" alt="Filme">
+                                    </div>
+                                    <h2>Taxi Driver</h2>
+                                    <p>Martin Scorcese</p>
+                                    <p>Drama</p>
+                                </div>
+                            </div>
+                            <div class="recommendation">
+                                <div class="user">
+                                    <h2>Apelido</h2>
+                                    <p>Recomendou para você</p>
+                                </div>
+                                <div class="item-card movie">
+                                    <h3>Filme</h3>
+                                    <div class="photo">
+                                        <img src="../assets/img/clapperboard.png" alt="Filme">
+                                    </div>
+                                    <h2>Taxi Driver</h2>
+                                    <p>Martin Scorcese</p>
+                                    <p>Drama</p>
+                                </div>
+                            </div>
+                        </div>                    
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
+  

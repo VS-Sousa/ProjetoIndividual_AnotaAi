@@ -300,7 +300,8 @@ span.fav-movie {
 .edit-account .container,
 .explore .container,
 .my-account .container,
-.recommend .container {
+.recommend .container,
+.recommendations .container {
     height: 100%;
     justify-content: center;
     align-items: center;
@@ -313,7 +314,8 @@ span.fav-movie {
 .explore .card,
 .friends .card,
 .my-account .card,
-.recommend .card {
+.recommend .card,
+.recommendations .card {
     padding: 22px;
 }
 
@@ -353,7 +355,7 @@ span.fav-movie {
     justify-content: space-between;
 }
 
-.form .fields .field {
+.form .fields .field  {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -367,7 +369,8 @@ span.fav-movie {
     margin-bottom: 10px;
 }
   
-.form .field input {
+.form .field input,
+.send-request .field input {
     font-size: 14px;
     border-radius: 5px;
     height: 24px;
@@ -375,12 +378,14 @@ span.fav-movie {
 }
 
 .sign-up .form .field input, 
-.edit-account .form #divUpdateUserFields .field input {
+.edit-account .form #divUpdateUserFields .field input,
+.send-request .field input {
     border: 2px solid var(--blue-jeans);
 }
 
 .sign-up .form .field input:focus, 
-.edit-account .form #divUpdateUserFields .field input:focus {
+.edit-account .form #divUpdateUserFields .field input:focus,
+.send-request .field input:focus {
     outline: 1px solid var(--blue-jeans-outline);
     border: 2px solid var(--blue-jeans);
 }
@@ -407,7 +412,8 @@ span.fav-movie {
 }
 
 #btnSignUp,
-#btnUpdateUser {
+#btnUpdateUser,
+#btnSendFriendshipRequest {
     background-color: var(--blue-jeans);
     border: 2px solid var(--blue-jeans);
 }
@@ -430,9 +436,9 @@ span.fav-movie {
 
 /* Index-Restrito */
 
-#aDashboard:hover, 
-#aDashboard:focus, 
-#aDashboard.selected {
+#aRecommendations:hover, 
+#aRecommendations:focus, 
+#aRecommendations.selected {
     outline: none;
     border-bottom: 5px solid var(--minion-yellow);
 }
@@ -565,6 +571,30 @@ span.fav-movie {
     margin-bottom: 5px;
 }
 
+.my-list .stats {
+    display: flex;
+    width: 80%;
+    justify-content: space-evenly;
+    align-self: center;
+    margin: auto;
+}
+
+.my-list .stats .legend {
+    display: flex;
+    width: 30%;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.my-list .stats .legend li {
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+.my-list .stats .legend li img {
+    margin-right: 20px;
+}
+
 .list {
     display: flex;
     flex-direction: column;
@@ -656,8 +686,7 @@ span.fav-movie {
     margin: 20px auto auto auto;
 }
 
-.explorer .item-card,
-.recommend .item-card {
+.item-card {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -667,8 +696,7 @@ span.fav-movie {
     cursor: pointer;
 }
 
-.explorer .item-card .photo,
-.recommend .item-card .photo {
+.item-card .photo {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -677,61 +705,51 @@ span.fav-movie {
     height: 150px;
 }
 
-.explorer .item-card .photo img,
-.recommend .item-card .photo img {
+.item-card .photo img {
     height: 100px;
     color: white;
 }
 
-.explorer .item-card h2,
-.recommend .item-card h2 {
+.item-card h2 {
     font-size: 18px;
     margin: 15px 0 10px;
     color: white;
 }
 
-.explorer .item-card h3, 
-.recommend .item-card h3 {
+.item-card h3 {
     font-size: 14px;
     margin-bottom: 8px;
     color: white;
 }
 
-.explorer .item-card p,
-.recommend .item-card p {
+.item-card p {
     margin: 0;
     margin-bottom: 10px;
     font-size: 14px;
     color: white;
 }
 
-.explorer .item-card.book,
-.recommend .item-card.book {
+.item-card.book {
     background: linear-gradient(var(--screamin-green), #14E128);
 }
 
-.explorer .item-card.book .photo,
-.recommend .item-card.book .photo {
+.item-card.book .photo {
     background-color: #14E128;
 }
 
-.explorer .item-card.music,
-.recommend .item-card.music {
+.item-card.music {
     background: linear-gradient(var(--fiery-rose), #FF0A1B);
 }
 
-.explorer .item-card.music .photo,
-.recommend .item-card.music .photo {
+.item-card.music .photo {
     background-color: #FF0A1B;
 }
 
-.explorer .item-card.movie,
-.recommend .item-card.movie {
+.item-card.movie {
     background: linear-gradient(var(--blue-jeans), #0074CC);
 }
 
-.explorer .item-card.movie .photo,
-.recommend .item-card.movie .photo {
+.item-card.movie .photo {
     background-color: #0074CC;
 }
 
@@ -767,6 +785,30 @@ span.fav-movie {
 
 #divRequests {
     display: none;
+    flex-direction: column;
+}
+
+.send-request {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+#divRequests .send-request p {
+    margin: 10px 0 16px;
+}
+
+.send-request .field {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.send-request .field input {
+    width: 60%;
+    margin-right: 30px;
 }
 
 .list.friends .list-item {
@@ -876,7 +918,8 @@ span.fav-movie {
 
 /* Recomendar */
 
-.recommend .card.content {
+.recommend .card.content,
+.recommendations .card.content {
     width: 80%;
     align-items: center;
     justify-content: space-between;
@@ -893,7 +936,8 @@ span.fav-movie {
     justify-content: flex-start;
 }
 
-.recommend .heading-underline {
+.recommend .heading-underline,
+#divRecommendationsH1 {
     border-bottom: 4px solid var(--minion-yellow);
 }
 
@@ -955,4 +999,55 @@ span.fav-movie {
 .recommend .item-card {
     width: 100%;
     margin-bottom: 10px;
+}
+
+/* Recomendações */
+
+.recommendations .title {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.recommendations .title .btn-link-auth {
+    color: var(--minion-yellow);
+    border: 4px solid var(--minion-yellow);
+}
+
+.recommendations .title .btn-link-auth:hover,
+.recommendations .title .btn-link-auth:focus {
+    color: white;
+    background-color: var(--minion-yellow);
+}
+
+.recommendations-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 96%;
+    margin: 20px auto auto;
+    column-gap: 40px;
+}
+
+.recommendation {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.recommendation .user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.recommendation .user h2 {
+    font-size: 22px;
+    margin: 0;
+    margin-bottom: 18px;
+}
+
+.recommendation .user p {
+    font-size: 16px;
+    margin: 5px 0;
 }

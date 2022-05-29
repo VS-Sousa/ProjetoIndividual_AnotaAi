@@ -35,7 +35,11 @@ CREATE TABLE Lista (
     CONSTRAINT FK_Lista_fkItem FOREIGN KEY (fkItem) REFERENCES Item (idItem),
     
     situacao CHAR(9), 
-    CONSTRAINT CK_Lista_situacao CHECK(situacao IN('pendente', 'progresso', 'concluido'))
+    CONSTRAINT CK_Lista_situacao CHECK(situacao IN('pendente', 'progresso', 'concluido')),
+    favorito CHAR(1),
+    CONSTRAINT CK_Lista_favorito CHECK(favorito IN('S', 'N')),
+    adicionado DATE NOT NULL,
+    atualizado DATE NOT NULL
 );
 
 -- Criando tabela Amizade

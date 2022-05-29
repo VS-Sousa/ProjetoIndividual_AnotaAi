@@ -15,15 +15,11 @@
 <body onload="verifyAuth()">
     <header class="header">
         <nav class="navbar container">
-            <a class="logo" href="../index.html">
+            <a class="logo" href="./index.html">
                 <img src="../assets/img/logo.png" alt="Anota Aí! Logo">                
                 Anota Aí!         
             </a>
             <nav class="navbar">
-                <a id="aDashboard" href="./index.html" class="link">
-                    <img src="../assets/img/house-solid.svg" class="icon">
-                    Dashboard
-                </a>
                 <a id="aList" href="./my-list.html" class="link">
                     <img src="../assets/img/list-check-solid.svg" class="icon">
                     Lista
@@ -35,6 +31,10 @@
                 <a id="aFriends" href="./friends.html" class="link selected">
                     <img src="../assets/img/user-group-solid.svg" class="icon">
                     Amigos
+                </a>
+                <a id="aRecommendations" href="./recommendations.html" class="link">
+                    <img src="../assets/img/share-solid.svg" class="icon">
+                    Indicações
                 </a>
             </nav>
             <nav class="navbar nav-auth">
@@ -80,7 +80,7 @@
                                     </ul>
                                     <div>
                                         <a id="aRecommend" href="">Indicar</a>
-                                        <a id="aRemove" href="">Remover</a>
+                                        <a id="aRemove" href="">Excluir</a>
                                     </div>
                                 </li>
                                 <li class="list-item">
@@ -97,7 +97,7 @@
                                     </ul>
                                     <div>
                                         <a id="aRecommend" href="">Indicar</a>
-                                        <a id="aRemove" href="">Remover</a>
+                                        <a id="aRemove" href="">Excluir</a>
                                     </div>
                                 </li>
                                 <li class="list-item">
@@ -114,7 +114,7 @@
                                     </ul>
                                     <div>
                                         <a id="aRecommend" href="">Indicar</a>
-                                        <a id="aRemove" href="">Remover</a>
+                                        <a id="aRemove" href="">Excluir</a>
                                     </div>
                                 </li>
                                 <li class="list-item">
@@ -131,13 +131,20 @@
                                     </ul>
                                     <div>
                                         <a id="aRecommend" href="">Indicar</a>
-                                        <a id="aRemove" href="">Remover</a>
+                                        <a id="aRemove" href="">Excluir</a>
                                     </div>
                                 </li>
                             </ul>
                         </div>
 
                         <div id="divRequests" class="container">
+                            <div class="send-request">
+                                <p>Procure pelo apelido do usuário que deseja enviar a solicitação de amizade:</p>
+                                <div class="field">
+                                    <input id="txtNickname" type="text" placeholder="Ex: ariel.marques404">
+                                    <button id="btnSendFriendshipRequest" class="btn-send">Enviar solicitação</button>
+                                </div>
+                            </div>
                             <ul class="list friends">
                                 <li class="list-item">
                                     <div>Amigo</div>
@@ -145,6 +152,62 @@
                                     <div>Item</div>
                                     <div>Preferência</div>
                                     <div>Operações</div>
+                                </li>
+                                <li class="list-item">
+                                    <img src="../assets/img/circle-user-solid.svg">
+                                    <div>Apelido</div>
+                                    <div class="music">Música</div>
+                                    <ul>
+                                        <li class="music">Rock</li>
+                                        <li class="book">Drama</li>
+                                        <li class="movie">Suspense</li>
+                                    </ul>
+                                    <div>
+                                        <a id="aRecommend" href="">Aceitar</a>
+                                        <a id="aRemove" href="">Recusar</a>
+                                    </div>
+                                </li>
+                                <li class="list-item">
+                                    <img src="../assets/img/circle-user-solid.svg">
+                                    <div>Apelido</div>
+                                    <div class="music">Música</div>
+                                    <ul>
+                                        <li class="music">Rock</li>
+                                        <li class="book">Drama</li>
+                                        <li class="movie">Suspense</li>
+                                    </ul>
+                                    <div>
+                                        <a id="aRecommend" href="">Aceitar</a>
+                                        <a id="aRemove" href="">Recusar</a>
+                                    </div>
+                                </li>
+                                <li class="list-item">
+                                    <img src="../assets/img/circle-user-solid.svg">
+                                    <div>Apelido</div>
+                                    <div class="music">Música</div>
+                                    <ul>
+                                        <li class="music">Rock</li>
+                                        <li class="book">Drama</li>
+                                        <li class="movie">Suspense</li>
+                                    </ul>
+                                    <div>
+                                        <a id="aRecommend" href="">Aceitar</a>
+                                        <a id="aRemove" href="">Recusar</a>
+                                    </div>
+                                </li>
+                                <li class="list-item">
+                                    <img src="../assets/img/circle-user-solid.svg">
+                                    <div>Apelido</div>
+                                    <div class="music">Música</div>
+                                    <ul>
+                                        <li class="music">Rock</li>
+                                        <li class="book">Drama</li>
+                                        <li class="movie">Suspense</li>
+                                    </ul>
+                                    <div>
+                                        <a id="aRecommend" href="">Aceitar</a>
+                                        <a id="aRemove" href="">Recusar</a>
+                                    </div>
                                 </li>
                                 <li class="list-item">
                                     <img src="../assets/img/circle-user-solid.svg">
