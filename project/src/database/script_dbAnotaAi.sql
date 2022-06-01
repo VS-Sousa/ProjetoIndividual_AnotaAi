@@ -69,3 +69,38 @@ CREATE TABLE Indicacao (
     dataIndicacao INT NOT NULL,
     PRIMARY KEY (fkUsuario, fkItem, fkAmigo, dataIndicacao)
 );
+
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Um Girassol da Cor do Seu Cabelo', 'Lô Borges', 'MPB', 'musica');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Rato do Porto', 'Zé Ramalho', 'MPB', 'musica');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Chega de Saudade', 'Tom Jobim', 'Bossa Nova', 'musica');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('So What', 'Miles Davis', 'Jazz', 'musica');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('CORSO', 'Tyler, The Creator', 'Rap', 'musica');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('EARFQUAKE', 'Tyler, The Creator', 'Rap', 'musica');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Good Old-Fashioned Lover Boy', 'Queen', 'Rock', 'musica');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Leaving Home Ain\'t Easy', 'Queen', 'Rock', 'musica');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Black Dog', 'Led Zeppelin', 'Rock', 'musica');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Seigfried', 'Frank Ocean', 'R&B', 'musica');
+
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Crime e Castigo', 'Fyodor Dostoevsky', 'Romance filosófico', 'livro');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('O Estrangeiro', 'Albert Camus', 'Romance filosófico', 'livro');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Heartstopper', 'Alice Oseman', 'Romance', 'livro');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Como fazer amigos e influenciar pessoas', 'Dale Carnegie', 'Auto Ajuda', 'livro');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('O Hobbit', 'J. R. R. Tolkien', 'Fantasia', 'livro');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('O Pequeno Príncipe', 'Antoine de Saint-Exupéry', 'Fantasia', 'livro');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Nemêsis', 'Agatha Christie', 'Fantasia', 'livro');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Assassinato no Expresso Oriente', 'Agatha Christie', 'Mistério', 'livro');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Macbeth', 'William Shakespeare', 'Tragédia', 'livro');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('O Retrato de Dorian Gray', 'Oscar Wilde', 'Romance filosófico', 'livro');
+
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Quero ser John Malkovich?', 'Spike Jonze', 'Comédia', 'filme');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Taxi Driver', 'Martin Scorsese', 'Drama', 'filme');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Shrek', 'Andrew Adamson', 'Comédia', 'filme');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('A Origem', 'Christopher Nolan', 'Ficção científica', 'filme');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Whiplash: Em Busca da Perfeição', 'Damien Chazelle', 'Drama', 'filme');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Um Lugar Chamado Notting Hill', 'Roger Michell', 'Romance', 'filme');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Carrie, a Estranha', 'Brian De Palma', 'Terror', 'filme');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Wallace & Gromit: A Batalha dos Vegetais', 'Nick Park', 'Comédia', 'filme');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('Monty Python em Busca do Cálice Sagrado', 'Terry Gilliam', 'Comédia', 'filme');
+INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('A.I. - Inteligência Artificial', 'Steven Spielberg', 'Ficção científica', 'filme');
+
+SELECT * FROM Item;
