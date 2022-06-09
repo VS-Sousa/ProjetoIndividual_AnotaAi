@@ -496,6 +496,8 @@ span.fav-movie {
     margin-bottom: 20px;
     font-size: 500;
     font-size: 24px;
+    text-decoration: none;
+    color: black;
 }
 
 .card .user-img {
@@ -637,7 +639,7 @@ span.fav-movie {
     height: fit-content;
     min-height: calc(100vh - 160px);
     padding: 30px 0;
-    background-size: cover;
+    background-size: contain;
     background-repeat: repeat-y;
 }
 
@@ -714,6 +716,7 @@ span.fav-movie {
     font-size: 18px;
     margin: 15px 0 10px;
     color: white;
+    text-align: center;
 }
 
 .item-card h3 {

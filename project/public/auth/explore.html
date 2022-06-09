@@ -13,7 +13,7 @@
     <script src="../assets/js/auth.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body onload="verifyAuth()">
+<body onload="verifyAuth(); getAllItems()">
     <header class="header">
         <nav class="navbar container">
             <a class="logo" href="./index.html">
@@ -55,35 +55,7 @@
                     <div class="heading-underline">
                         <h1>Explorar</h1>
                     </div>
-                    <div class="explorer">
-                        <div class="item-card music" onclick="addItemToList({ titulo: 'Seigfried', criador: 'Frank Ocean' })">
-                            <h3>Música</h3>
-                            <div class="photo">
-                                <img src="../assets/img/music.png" alt="Filme">
-                            </div>
-                            <h2>Seigfried</h2>
-                            <p>Frank Ocean</p>
-                            <p>Rap</p>
-                        </div>
-                        <div class="item-card book" onclick="addItemToList({ titulo: 'Orgulho e Preconceito', criador: 'Jane Austen' })">
-                            <h3>Livro</h3>
-                            <div class="photo">
-                                <img src="../assets/img/livro.png" alt="Livro">
-                            </div>
-                            <h2>Orgulho e Preconceito</h2>
-                            <p>Jane Austen</p>
-                            <p>Romance de época</p>
-                        </div>
-                        <div class="item-card movie" onclick="addItemToList({ titulo: 'Taxi Driver', criador: 'Martin Scorcese' })">
-                            <h3>Filme</h3>
-                            <div class="photo">
-                                <img src="../assets/img/clapperboard.png" alt="Filme">
-                            </div>
-                            <h2>Taxi Driver</h2>
-                            <p>Martin Scorcese</p>
-                            <p>Drama</p>
-                        </div>
-                    </div>
+                    <div id="divExplorer" class="explorer"></div>
                 </div>
             </div>
         </section>
@@ -91,16 +63,120 @@
 </body>
 </html>
 <script>
-    function addItemToList(item) {
+    function getAllItems() {
+        fetch(`/items`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(json => {
+                    if (json.length > 0) {
+                        for (let index = 0; index < json.length; index++) {
+                            var item = json[index];
+
+                            renderItem(item);
+                        }
+
+                    } else {
+                        Swal.fire({
+                            title: 'Aviso',
+                            text: 'Nenhum item foi encontrado',
+                            icon: 'warning',
+                            confirmButtonColor: '#6BF178',
+                        });
+                    }
+                });
+
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os items!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                throw new Error('Houve um erro ao carregar os items!')
+            }
+        }).catch(error => {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao carregar os items!',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.error(`ERRO: `, error);
+        })
+    }
+
+    function addItemToListHandler(item) {
         Swal.fire({
             title: 'Adicionar a Lista',
-            text: `Deseja adicionar "${item.titulo}" por ${item.criador}?`,
+            text: `Deseja adicionar "${item.titulo}" por ${item.criador} à sua lista?`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#6BF178',
             cancelButtonText: 'Cancelar',
         }).then((result) => {
             if (result.isConfirmed) {
+                addItemToList(item.idItem);
+            }
+        })
+    }
+
+    function renderItem(item) {
+        var element = document.createElement('div');
+        element.classList.add('item-card');
+        element.addEventListener('click', function (event) {
+            addItemToListHandler(item);
+        })
+
+        var imgSrc = '';
+
+        switch (item.tipo) {
+            case 'Música':
+                element.classList.add('music');
+                imgSrc = 'music';
+                break;
+            case 'Livro':
+                element.classList.add('book');
+                imgSrc = 'livro';
+                break;
+            case 'Filme':
+                element.classList.add('movie');
+                imgSrc = 'clapperboard';
+                break;
+        }
+
+        element.innerHTML = `
+            <h3>${item.tipo}</h3>
+                <div class="photo">
+                    <img src="../assets/img/${imgSrc}.png" alt="${item.tipo}">
+                </div>
+            <h2>${item.titulo}</h2>
+            <p>${item.criador}</p>
+            <p>${item.genero}</p>
+        `;
+
+
+        document.getElementById('divExplorer').appendChild(element);
+    }
+
+    function addItemToList(idItem) {
+        fetch(`/lists/add-item/${user.idUsuario}`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idItemServer: idItem
+            })
+        }).then(response => {
+            if (response.ok) {
                 Swal.fire({
                     title: 'Suceso',
                     text: 'Item adicionado a lista com sucesso',
@@ -109,7 +185,43 @@
                     timerProgressBar: true,
                     confirmButtonColor: '#6BF178',
                 });
+                return;
+
+            } else if (response.status == 403) {   
+                response.text().then(errorMessage => {
+                    if (errorMessage == 'Item já está na lista!') {
+                        Swal.fire({
+                            title: 'Aviso',
+                            text: errorMessage,
+                            icon: 'warning',
+                            confirmButtonColor: '#6BF178',
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Erro',
+                            text: errorMessage,
+                            icon: 'error',
+                            showConfirmButton: false,
+                            showDenyButton: true,
+                            denyButtonText: 'OK'
+                        });
+                        throw new Error(errorMessage);  
+                    }
+                });             
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao adicionar item à lista',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                throw new Error('Houve um erro ao adicionar item à lista');  
             }
-        })
+
+        }).catch(error => {            
+            console.error(`ERRO: `, error);
+        });
     }
 </script>
