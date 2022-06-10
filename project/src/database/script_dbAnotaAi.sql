@@ -107,3 +107,5 @@ INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('O Retrato de Dorian Gr
 INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('A.I. - Inteligência Artificial', 'Steven Spielberg', 'Ficção científica', 'Filme');
 
 SELECT * FROM Item;
+
+SELECT i.idItem, i.titulo, i.criador, i.genero, i.tipo, l.situacao FROM Lista l INNER JOIN Item i ON l.fkItem = i.idItem WHERE l.fkUsuario = 1;

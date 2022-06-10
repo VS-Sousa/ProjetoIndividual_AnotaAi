@@ -58,7 +58,7 @@ function signIn(request, response) {
             }
         }).catch(error => {
             console.log(error);
-            console.log("\nHouve um erro ao realizar o cadastro! Erro: ", error.sqlMessage);
+            console.log("\nHouve um erro ao realizar o login! Erro: ", error.sqlMessage);
             response.status(500).json(error.sqlMessage);
         });
     }
@@ -95,7 +95,7 @@ function updateUser(request, response) {
             });
         }).catch(error => {
             console.log(error);
-            console.log("\nHouve um erro ao realizar o cadastro! Erro: ", error.sqlMessage);
+            console.log("\nHouve um erro ao realizar a atualização do cadastro do usuário! Erro: ", error.sqlMessage);
             response.status(500).json(error.sqlMessage);
         });
     }
@@ -124,19 +124,19 @@ function changePassword(request, response) {
                     response.json(updatedUser[0]);
                 }).catch(error => {
                     console.log(error);
-                    console.log("\nHouve um erro ao realizar o cadastro! Erro: ", error.sqlMessage);
+                    console.log("\nHouve um erro ao recuperar usuário! Erro: ", error.sqlMessage);
                     response.status(500).json(error.sqlMessage);
                 });
 
             }).catch(error => {
                 console.log(error);
-                console.log("\nHouve um erro ao realizar o cadastro! Erro: ", error.sqlMessage);
+                console.log("\nHouve um erro ao tentar mudar a senha! Erro: ", error.sqlMessage);
                 response.status(500).json(error.sqlMessage);
             });
 
         }).catch(error => {
             console.log(error);
-            console.log("\nHouve um erro ao realizar o cadastro! Erro: ", error.sqlMessage);
+            console.log("\nHouve um erro ao verificar senha antiga! Erro: ", error.sqlMessage);
             response.status(500).json(error.sqlMessage);
         });
     }

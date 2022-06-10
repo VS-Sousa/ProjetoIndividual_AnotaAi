@@ -26,18 +26,35 @@ function addToList(request, response) {
                 
             }).catch(error => {
                 console.log(error);
-                console.log("\nHouve um erro ao selecionar todos os items! Erro: ", error.sqlMessage);
+                console.log("\nHouve um erro ao ao adicionar item à lista! Erro: ", error.sqlMessage);
                 response.status(500).json(error.sqlMessage);
             });
 
         }).catch(error => {
             console.log(error);
-            console.log("\nHouve um erro ao selecionar todos os items! Erro: ", error.sqlMessage);
+            console.log("\nHouve um erro ao verificar se item está na lista! Erro: ", error.sqlMessage);
             response.status(500).json(error.sqlMessage);
         });
     }
 }
 
+function getAllItemsFromUserList(request, response) {
+    var idUser = request.params.idUser;
+
+    if (idUser == undefined) {
+        response.status(400).send('Id do Usuário está indefinido');
+    } else {
+        listModel.getItemsFromListByUserId(idUser).then(result => {
+            response.json(result);
+        }).catch(error => {
+            console.log(error);
+            console.log("\nHouve um erro ao selecionar items da lista! Erro: ", error.sqlMessage);
+            response.status(500).json(error.sqlMessage);
+        })
+    }
+}
+
 module.exports = {
-    addToList
+    addToList,
+    getAllItemsFromUserList
 }

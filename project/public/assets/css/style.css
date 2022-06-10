@@ -271,7 +271,7 @@ body {
     align-items: center;
 }
 
-.card.content ul li span {
+.creator .card.content ul li span {
     margin-top: 8px;
     font-weight: 500;
     padding: 2px 10px;

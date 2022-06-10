@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     <script src="../assets/js/auth.js"></script>
 </head>
-<body onload="verifyAuth()">
+<body onload="verifyAuth(); getMyListItems()">
     <header class="header">
         <nav class="navbar container">
             <a class="logo" href="./index.html">
@@ -57,81 +57,17 @@
                         </div>
                         <div class="stats">
                             <ul class="legend">
-                                <li><img src="../assets/img/status-pending.svg" alt=""> 11 itens pendentes</li>
-                                <li><img src="../assets/img/status-progress.svg" alt=""> 4 itens em progresso</li>
-                                <li><img src="../assets/img/status-finished.svg" alt=""> 12 itens finalizados</li>
+                                <li id="spnStatusPending"><img src="../assets/img/status-pending.svg" alt=""> 0 itens pendentes</li>
+                                <li id="spnStatusProgress"><img src="../assets/img/status-progress.svg" alt=""> 0 itens em progresso</li>
+                                <li id="spnStatusFinished"><img src="../assets/img/status-finished.svg" alt=""> 0 itens finalizados</li>
                             </ul>
                             <ul class="legend">
-                                <li class="music">13 músicas</li>
-                                <li class="book">9 livros</li>
-                                <li class="movie">5 filmes</li>
+                                <li id="spnTypesMusic" class="music">0 músicas</li>
+                                <li id="spnTypesBook" class="book">0 livros</li>
+                                <li id="spnTypesMovie" class="movie">0 filmes</li>
                             </ul>
                         </div>
-                        <ul class="list">
-                            <li class="list-item">
-                                <div>Título</div>
-                                <div>Criador</div>
-                                <div>Gênero</div>
-                                <div>Tipo</div>
-                                <div>Status</div>
-                                <div>Operações</div>
-                            </li>
-                            <li class="list-item">
-                                <div>CORSO</div>
-                                <div>Tyler, The Creator</div>
-                                <div>Rap</div>
-                                <div class="music">Música</div>
-                                <img src="../assets/img/status-pending.svg" alt="">
-                                <div>
-                                    <a id="aRecommend" href="">Indicar</a>
-                                    <a id="aRemove" href="">Remover</a>
-                                </div>
-                            </li>
-                            <li class="list-item">
-                                <div>What Did Jack Do?</div>
-                                <div>David Lynch</div>
-                                <div>Suspense</div>
-                                <div class="movie">Filme</div>
-                                <img src="../assets/img/status-finished.svg" alt="">
-                                <div>
-                                    <a id="aRecommend" href="">Indicar</a>
-                                    <a id="aRemove" href="">Remover</a>
-                                </div>
-                            </li>
-                            <li class="list-item">
-                                <div>Crime e Castigo</div>
-                                <div>Fyodor Dostoevsky</div>
-                                <div>Romance filosófico</div>
-                                <div class="book">Livro</div>
-                                <img src="../assets/img/status-progress.svg" alt="">
-                                <div>
-                                    <a id="aRecommend" href="">Indicar</a>
-                                    <a id="aRemove" href="">Remover</a>
-                                </div>
-                            </li>
-                            <li class="list-item">
-                                <div>Cais</div>
-                                <div>Milton Nascimento</div>
-                                <div>MPB</div>
-                                <div class="music">Música</div>
-                                <img src="../assets/img/status-finished.svg" alt="">
-                                <div>
-                                    <a id="aRecommend" href="">Indicar</a>
-                                    <a id="aRemove" href="">Remover</a>
-                                </div>
-                            </li>
-                            <li class="list-item">
-                                <div>Como fazer amigos e influenciar pessoas</div>
-                                <div>Dale Carnegie</div>
-                                <div>Auto-ajuda</div>
-                                <div class="book">Livro</div>
-                                <img src="../assets/img/status-progress.svg" alt="">
-                                <div>
-                                    <a id="aRecommend" href="">Indicar</a>
-                                    <a id="aRemove" href="">Remover</a>
-                                </div>
-                            </li>
-                        </ul>
+                        <ul id="ulMyList" class="list"></ul>
                     </div>
                 </div>
             </div>
@@ -139,4 +75,135 @@
     </main>
 </body>
 </html>
-  
+<script>
+    var statusKPI = {
+        pending: 0,
+        progress: 0,
+        finished: 0,
+    }
+
+    var typesKPI = {
+        musics: 0,
+        books: 0,
+        movies: 0,
+    }
+
+    var myList = [];
+
+    function getMyListItems() {
+        fetch(`/lists/${user.idUsuario}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(json => {
+                    myList = json;
+
+                    var header = document.createElement('li');
+                    header.classList.add('list-item');
+
+                    header.innerHTML = `
+                        <div>Título</div>
+                        <div>Criador</div>
+                        <div>Gênero</div>
+                        <div>Tipo</div>
+                        <div>Status</div>
+                        <div>Operações</div>
+                    `;
+
+                    document.getElementById('ulMyList').appendChild(header)
+
+                    myList.forEach(item => {
+                        var typeClass = '';
+                        var statusSrc = '';
+
+                        switch (item.tipo) {
+                            case 'Música':
+                                typesKPI.musics++;
+                                typeClass = 'music';
+                                break;
+                            case 'Livro':
+                                typesKPI.books++;
+                                typeClass = 'book';
+                                break;
+                            case 'Filme':
+                                typesKPI.movies++;
+                                typeClass = 'movie';
+                                break;
+                        }
+
+                        switch (item.situacao) {
+                            case 'Pendente':
+                                statusKPI.pending++;
+                                statusSrc = 'pending';
+                                break;
+                            case 'Progresso':
+                                statusKPI.progress++
+                                statusSrc = 'progress';
+                                break;
+                            case 'Concluido':
+                                statusKPI.finished++;
+                                statusSrc = 'finished';
+                                break;
+                        }
+
+                        renderItem(item, typeClass, statusSrc);
+                    });
+                    updateKPIs();
+                });
+
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os items!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                }); 
+                throw new Error('Houve um erro ao carregar os items!');
+            }
+        }).catch(error => {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao carregar os items!',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.error(`ERRO: `, error);
+        })
+    }
+
+    function renderItem(item, typeClass, statusSrc) {
+        var element = document.createElement('li');
+        element.classList.add('list-item');
+
+        element.innerHTML = `
+            <div>${item.titulo}</div>
+            <div>${item.criador}</div>
+            <div>${item.genero}</div>
+            <div class="${typeClass}">${item.tipo}</div>
+            <img src="../assets/img/status-${statusSrc}.svg" alt="">
+            <div>
+                <a id="aRecommend" href="">Indicar</a>
+                <a id="aRemove" href="">Remover</a>
+            </div>
+        `;
+
+        document.getElementById('ulMyList').appendChild(element);
+    }
+
+
+    function updateKPIs() {
+        document.getElementById('spnStatusPending').innerHTML = `<img src="../assets/img/status-pending.svg" alt=""> ${statusKPI.pending} itens pendentes`;
+        document.getElementById('spnStatusProgress').innerHTML = `<img src="../assets/img/status-progress.svg" alt=""> ${statusKPI.progress} itens em progresso`;
+        document.getElementById('spnStatusFinished').innerHTML = `<img src="../assets/img/status-finished.svg" alt=""> ${statusKPI.finished} itens finalizados`;
+        document.getElementById('spnTypesMusic').innerHTML = `${typesKPI.musics} músicas`;
+        document.getElementById('spnTypesBook').innerHTML = `${typesKPI.books} livros`;
+        document.getElementById('spnTypesMovie').innerHTML = `${typesKPI.movies} filmes`;
+    }
+</script>
