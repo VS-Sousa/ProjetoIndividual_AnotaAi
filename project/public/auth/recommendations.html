@@ -11,8 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Yellowtail&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
     <script src="../assets/js/auth.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body onload="verifyAuth()">
+<body onload="verifyAuth(); getAllReceivedRecommendations()">
     <header class="header">
         <nav class="navbar container">
             <a class="logo" href="./index.html">
@@ -58,53 +59,7 @@
                             </div>
                             <a class="btn-link-auth" href="./recommend.html">Indicar</a>
                         </div>
-                        <div class="recommendations-grid">
-                            <div class="recommendation">
-                                <div class="user">
-                                    <h2>Apelido</h2>
-                                    <p>Recomendou para você</p>
-                                </div>
-                                <div class="item-card movie">
-                                    <h3>Filme</h3>
-                                    <div class="photo">
-                                        <img src="../assets/img/clapperboard.png" alt="Filme">
-                                    </div>
-                                    <h2>Taxi Driver</h2>
-                                    <p>Martin Scorcese</p>
-                                    <p>Drama</p>
-                                </div>
-                            </div>
-                            <div class="recommendation">
-                                <div class="user">
-                                    <h2>Apelido</h2>
-                                    <p>Recomendou para você</p>
-                                </div>
-                                <div class="item-card movie">
-                                    <h3>Filme</h3>
-                                    <div class="photo">
-                                        <img src="../assets/img/clapperboard.png" alt="Filme">
-                                    </div>
-                                    <h2>Taxi Driver</h2>
-                                    <p>Martin Scorcese</p>
-                                    <p>Drama</p>
-                                </div>
-                            </div>
-                            <div class="recommendation">
-                                <div class="user">
-                                    <h2>Apelido</h2>
-                                    <p>Recomendou para você</p>
-                                </div>
-                                <div class="item-card movie">
-                                    <h3>Filme</h3>
-                                    <div class="photo">
-                                        <img src="../assets/img/clapperboard.png" alt="Filme">
-                                    </div>
-                                    <h2>Taxi Driver</h2>
-                                    <p>Martin Scorcese</p>
-                                    <p>Drama</p>
-                                </div>
-                            </div>
-                        </div>                    
+                        <div id="divRecommendations" class="recommendations-grid"></div>                    
                     </div>
                 </div>
             </div>
@@ -112,4 +67,204 @@
     </main>
 </body>
 </html>
+<script>
+    function getAllReceivedRecommendations() {
+        fetch(`/recommendations/${user.idUsuario}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(json => {
+                    json.forEach(recommendation => {
+                        renderRecommendation(recommendation)
+                    });
+                })
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os items!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                }); 
+                throw new Error('Houve um erro ao carregar os items!');
+            }
+        }).catch(error => {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao carregar recomendações!',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.error(`ERRO: `, error);
+        })
+    }
+
+    function renderRecommendation(recommendation) {
+        var nicknameH2 = document.createElement('h2');
+        nicknameH2.innerText = recommendation.apelido;
+
+        var pElement = document.createElement('p');
+        pElement.innerText = 'Recomendou para você';
+
+        var userDiv = document.createElement('div');
+        userDiv.classList.add('user');
+        userDiv.appendChild(nicknameH2);
+        userDiv.appendChild(pElement);
+
+        var typeClass = ''
+        var imgSrc = ''
+
+        switch (recommendation.tipo) {
+            case 'Música':
+                typeClass = 'music';
+                imgSrc = 'music';
+                break;
+            case 'Livro':
+                typeClass = 'book';
+                imgSrc = 'livro';
+                break;
+            case 'Filme':
+                typeClass = 'movie';
+                imgSrc = 'clapperboard';
+                break;
+        }
+
+        var itemTypeH3 = document.createElement('h3');
+        itemTypeH3.innerText = recommendation.tipo;
+
+        var imgElement = document.createElement('img');
+        imgElement.src = `../assets/img/${imgSrc}.png`;
+
+        var photoDiv = document.createElement('div');
+        photoDiv.classList.add('photo');
+        photoDiv.appendChild(imgElement);
+
+        var itemTitleH2 = document.createElement('h2');
+        itemTitleH2.innerText = recommendation.titulo;
+
+        var itemCreatorP = document.createElement('p');
+        itemCreatorP.innerText = recommendation.criador;
+
+        var itemGenreP = document.createElement('p');
+        itemGenreP.innerText = recommendation.genero;
+
+        var itemCard = document.createElement('div');
+        itemCard.classList.add('item-card');
+        itemCard.classList.add(typeClass);
+        itemCard.appendChild(itemTypeH3);
+        itemCard.appendChild(photoDiv);
+        itemCard.appendChild(itemTitleH2);
+        itemCard.appendChild(itemCreatorP);
+        itemCard.appendChild(itemGenreP);
+        itemCard.addEventListener('click', function (event) {
+            handleRecommendationDecision(recommendation);
+        })
+
+        var element = document.createElement('div');
+        element.classList.add('recommendation');
+        element.id = `divRecommendation#${recommendation.idAmigo}#${recommendation.idItem}`
+        element.appendChild(userDiv);
+        element.appendChild(itemCard);
+
+        document.getElementById('divRecommendations').appendChild(element);
+    }
+
+    function handleRecommendationDecision(recommendation) {
+        Swal.fire({
+            title: `Indicação de ${recommendation.apelido}`,
+            text: `O que deseja fazer com a recomendação de "${recommendation.titulo}" por ${recommendation.criador}?`,
+            icon: 'question',
+            showCancelButton: true,
+            showDenyButton: true,
+            confirmButtonColor: '#6BF178',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Adicionar à lista',
+            denyButtonText: 'Excluir recomendação'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                addRecommendationToList(recommendation.idAmigo, recommendation.idItem)
+            } else if (result.isDenied) {
+                deleteRecommendation(recommendation.idAmigo, recommendation.idItem)
+            }
+        })
+    }
+
+    function deleteRecommendation(idFriend, idItem) {
+        fetch(`/recommendations/${user.idUsuario}&${idItem}&${idFriend}`, {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => {
+            if (response.ok) {
+                var deletedElement = document.getElementById(`divRecommendation#${idFriend}#${idItem}`);
+                deletedElement.parentNode.removeChild(deletedElement);
+
+                Swal.fire({
+                    title: 'Suceso',
+                    text: 'Recomendação excluída com sucesso',
+                    icon: 'success',
+                    timer: 1500,
+                    timerProgressBar: true,
+                    confirmButtonColor: '#6BF178',
+                });
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao excluir recomendação',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+            }
+        }).catch(error => {            
+            console.error(`ERRO: `, error);
+        });
+    }
+
+    function addRecommendationToList(idFriend, idItem) {
+        fetch(`/recommendations/${user.idUsuario}`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idSenderServer: idFriend,
+                idItemServer: idItem
+            })
+        }).then(response => {
+            if (response.ok) {
+                var deletedElement = document.getElementById(`divRecommendation#${idFriend}#${idItem}`);
+                deletedElement.parentNode.removeChild(deletedElement);
+
+                Swal.fire({
+                    title: 'Suceso',
+                    text: 'Item adicionado à lista com sucesso',
+                    icon: 'success',
+                    timer: 1500,
+                    timerProgressBar: true,
+                    confirmButtonColor: '#6BF178',
+                });
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao adicionar item recomendado à lista',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+            }
+        }).catch(error => {            
+            console.error(`ERRO: `, error);
+        });
+    }
+</script>
   

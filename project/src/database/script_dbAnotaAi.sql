@@ -66,9 +66,7 @@ CREATE TABLE Indicacao (
     
     fkAmigo INT NOT NULL,
     CONSTRAINT FK_Indicacao_fkAmigo FOREIGN KEY (fkAmigo) REFERENCES Usuario (idUsuario),
-    
-    dataIndicacao DATE NOT NULL,
-    PRIMARY KEY (fkUsuario, fkItem, fkAmigo, dataIndicacao)
+    PRIMARY KEY (fkUsuario, fkItem, fkAmigo)
 );
 
 INSERT INTO Usuario (nome, email, apelido, senha) VALUES ('Vinícius da Silva Sousa', 'vinicius.sousa@sptech.school', 'VS-Sousa', SHA2('MinhaSenhaSegura', 512));
@@ -109,28 +107,14 @@ INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('A.I. - Inteligência A
 
 SELECT * FROM Item;
 
-SELECT 
-	az.fkUsuario as 'idAmigo', 
-    ag.nome,
+SELECT
+	ag.idUsuario as 'idAmigo',
     ag.apelido,
-	(SELECT i.tipo FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = ag.idUsuario GROUP BY i.tipo ORDER BY COUNT(i.tipo) DESC LIMIT 1)
-    as 'tipoPreferido',
-    (SELECT i.genero FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = ag.idUsuario AND tipo = tipoPreferido GROUP BY i.genero ORDER BY COUNT(i.genero) DESC LIMIT 1)
-    as 'generoPreferido',
-    'Amigo' as 'papel'
-FROM Amizade az
-INNER JOIN Usuario ag ON ag.idUsuario = az.fkUsuario
-WHERE fkAmigo = 2 AND az.situacao = 'Amigo'
-	UNION
-SELECT 
-	az.fkAmigo as 'idAmigo', 
-    ag.nome,
-    ag.apelido,
-	(SELECT i.tipo FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = az.fkAmigo GROUP BY i.tipo ORDER BY COUNT(i.tipo) DESC LIMIT 1)
-    as 'tipoPreferido',
-    (SELECT i.genero FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = az.fkAmigo AND tipo = tipoPreferido GROUP BY i.genero ORDER BY COUNT(i.genero) DESC LIMIT 1)
-    as 'generoPreferido',
-    'Usuario' as 'papel'
-FROM Amizade az
-INNER JOIN Usuario ag ON ag.idUsuario = az.fkAmigo
-WHERE fkUsuario = 2 AND az.situacao = 'Amigo';
+    it.titulo,
+    it.criador,
+    it.genero,
+    it.tipo
+FROM Indicacao ind
+INNER JOIN Usuario ag ON ag.idUsuario = ind.fkUsuario
+INNER JOIN Item it ON it.idItem = ind.fkItem
+WHERE ind.fkAmigo = 2

@@ -38,7 +38,6 @@ function sendRecommendation(request, response) {
     var idUser = request.params.idUser;
     var idItem = request.body.idItemServer;
     var idFriend = request.body.idFriendServer;
-    var recommendationDate = request.body.recommendationDateServer;
 
     if (idUser == undefined) {
         response.status(403).send('Id do Usuário está indefinido!');
@@ -51,11 +50,11 @@ function sendRecommendation(request, response) {
             if (exists.length <= 0) {
                 response.status(403).send('Você não pode indicar algo para um usuário que não é seu amigo!');
             } else {
-                recommendationModel.findRecommendation(idUser, idItem, idFriend, recommendationDate).then(alreadyRecommended => {
+                recommendationModel.findRecommendation(idUser, idItem, idFriend).then(alreadyRecommended => {
                     if (alreadyRecommended.length > 0) {
-                        response.status(403).send('Você já recomendou este item para esse usuário hoje!');
+                        response.status(403).send('Você já recomendou este item para esse usuário!');
                     } else {
-                        recommendationModel.sendRecommendation(idUser, idItem, idFriend, recommendationDate).then(result => {
+                        recommendationModel.sendRecommendation(idUser, idItem, idFriend).then(result => {
                             response.json(result);
                         }).catch(error => {
                             console.log(error);
@@ -77,7 +76,96 @@ function sendRecommendation(request, response) {
     } 
 }
 
+function getAllReceivedRecommendations(request, response) {
+    var idUser = request.params.idUser
+
+    if (idUser == undefined) {
+        response.status(403).send('Id do Usuário está indefinido!');
+    } else {
+        recommendationModel.getAllReceivedRecommendations(idUser).then(result => {
+            response.json(result);
+        }).catch(error => {
+            console.log(error);
+            console.log("\nHouve um erro ao recuperar todas as indicações recebidas! Erro: ", error.sqlMessage);
+            response.status(500).json(error.sqlMessage);
+        });
+    }
+}
+
+function deleteRecommendation(request, response) {
+    var idReceiver = request.params.idReceiver;
+    var idItem = request.params.idItem;
+    var idSender = request.params.idSender;
+
+    if (idReceiver == undefined) {
+        response.status(403).send('Id do Usuário está indefinido!');
+    } else if (idItem == undefined) {
+        response.status(403).send('Id do Item está indefinido!');
+    } else if (idSender == undefined) {
+        response.status(403).send('Id do Amigo está indefinido!');
+    } else {
+        recommendationModel.deleteRecommendation(idSender, idItem, idReceiver).then(result => {
+            var hasRemoved = result.affectedRows;
+
+            if (hasRemoved != 1) {
+                throw new Error('Houve um erro ao excluir recomendação!');
+            }
+
+            response.json(result);
+
+        }).catch(error => {
+            console.log(error);
+            console.log("\nHouve um erro ao deletar recomendação! Erro: ", error.sqlMessage);
+            response.status(500).json(error.sqlMessage);
+        });
+    }
+}
+
+function addRecommendationToList(request, response) {
+    var idReceiver = request.params.idReceiver;
+    var idSender = request.body.idSenderServer;
+    var idItem = request.body.idItemServer;
+
+    if (idReceiver == undefined) {
+        response.status(403).send('Id do Usuário está indefinido!');
+    } else if (idItem == undefined) {
+        response.status(403).send('Id do Item está indefinido!');
+    } else if (idSender == undefined) {
+        response.status(403).send('Id do Amigo está indefinido!');
+    } else {
+        listModel.addToList(idReceiver, idItem).then(add => {
+            var hasAdded = add.affectedRows;
+
+            if (hasAdded != 1) {
+                throw new Error('Houve um erro ao adicionar item à lista!');
+            }
+
+            recommendationModel.deleteRecommendation(idSender, idItem, idReceiver).then(result => {
+                var hasRemoved = result.affectedRows;
+
+                if (hasRemoved != 1) {
+                    throw new Error('Houve um erro ao excluir recomendação!');
+                }
+
+                response.json(result);
+            }).catch(error => {
+                console.log(error);
+                console.log("\nHouve um erro ao adicionar item à lista! Erro: ", error.sqlMessage);
+                response.status(500).json(error.sqlMessage);
+            });
+
+        }).catch(error => {
+            console.log(error);
+            console.log("\nHouve um erro ao adicionar item à lista! Erro: ", error.sqlMessage);
+            response.status(500).json(error.sqlMessage);
+        });
+    }
+}
+
 module.exports = {
     getItemsAndFriends,
-    sendRecommendation
+    sendRecommendation,
+    getAllReceivedRecommendations,
+    deleteRecommendation,
+    addRecommendationToList
 }
