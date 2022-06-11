@@ -120,5 +120,5 @@ SELECT
     (SELECT i.genero FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = ag.idUsuario AND tipo = 'Filme' GROUP BY i.genero ORDER BY COUNT(i.genero) DESC LIMIT 1)
     as 'generoFilme'
 FROM Amizade az
-INNER JOIN Usuario ag ON ag.idUsuario = az.fkAmigo
-WHERE fkUsuario = 1 AND az.situacao = 'Pendente';
+INNER JOIN Usuario ag ON ag.idUsuario = az.fkUsuario
+WHERE fkAmigo = 1 AND az.situacao = 'Pendente';

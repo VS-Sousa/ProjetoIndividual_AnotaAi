@@ -14,7 +14,7 @@
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/validations.js"></script>
 </head>
-<body onload="verifyAuth(); getAllReceivedRequests()">
+<body onload="verifyAuth(); loadFriends()">
     <header class="header">
         <nav class="navbar container">
             <a class="logo" href="./index.html">
@@ -60,83 +60,7 @@
                         </div>
 
                         <div id="divFriends" class="container">
-                            <ul class="list friends">
-                                <li class="list-item">
-                                    <div>Amigo</div>
-                                    <div>Apelido</div>
-                                    <div>Item</div>
-                                    <div>Preferência</div>
-                                    <div>Operações</div>
-                                </li>
-                                <li class="list-item">
-                                    <img src="../assets/img/circle-user-solid.svg">
-                                    <ul>
-                                        <li>Apelido</li>
-                                        <li>Nome</li>
-                                    </ul>
-                                    <div class="music">Música</div>
-                                    <ul>
-                                        <li class="music">Rock</li>
-                                        <li class="book">Drama</li>
-                                        <li class="movie">Suspense</li>
-                                    </ul>
-                                    <div>
-                                        <a class="recommend-link" href="">Indicar</a>
-                                        <a class="remove-link" href="">Excluir</a>
-                                    </div>
-                                </li>
-                                <li class="list-item">
-                                    <img src="../assets/img/circle-user-solid.svg">
-                                    <ul>
-                                        <li>Apelido</li>
-                                        <li>Nome</li>
-                                    </ul>
-                                    <div class="music">Música</div>
-                                    <ul>
-                                        <li class="music">Rock</li>
-                                        <li class="book">Drama</li>
-                                        <li class="movie">Suspense</li>
-                                    </ul>
-                                    <div>
-                                        <a class="recommend-link" href="">Indicar</a>
-                                        <a class="remove-link" href="">Excluir</a>
-                                    </div>
-                                </li>
-                                <li class="list-item">
-                                    <img src="../assets/img/circle-user-solid.svg">
-                                    <ul>
-                                        <li>Apelido</li>
-                                        <li>Nome</li>
-                                    </ul>
-                                    <div class="music">Música</div>
-                                    <ul>
-                                        <li class="music">Rock</li>
-                                        <li class="book">Drama</li>
-                                        <li class="movie">Suspense</li>
-                                    </ul>
-                                    <div>
-                                        <a class="recommend-link" href="">Indicar</a>
-                                        <a class="remove-link" href="">Excluir</a>
-                                    </div>
-                                </li>
-                                <li class="list-item">
-                                    <img src="../assets/img/circle-user-solid.svg">
-                                    <ul>
-                                        <li>Apelido</li>
-                                        <li>Nome</li>
-                                    </ul>
-                                    <div class="music">Música</div>
-                                    <ul>
-                                        <li class="music">Rock</li>
-                                        <li class="book">Drama</li>
-                                        <li class="movie">Suspense</li>
-                                    </ul>
-                                    <div>
-                                        <a class="recommend-link" href="">Indicar</a>
-                                        <a class="remove-link" href="">Excluir</a>
-                                    </div>
-                                </li>
-                            </ul>
+                            <ul id="ulFriends" class="list friends"></ul>
                         </div>
 
                         <div id="divRequests" class="container">
@@ -147,85 +71,7 @@
                                     <button id="btnSendFriendshipRequest" onclick="sendFriendshipRequest()" class="btn-send">Enviar solicitação</button>
                                 </div>
                             </div>
-                            <ul id="ulReceivedRequests" class="list friends">
-                                <!-- <li class="list-item">
-                                    <div>Amigo</div>
-                                    <div>Apelido</div>
-                                    <div>Item</div>
-                                    <div>Preferência</div>
-                                    <div>Operações</div>
-                                </li> -->
-                                <!-- <li class="list-item">
-                                    <img src="../assets/img/circle-user-solid.svg">
-                                    <div>Apelido</div>
-                                    <div class="music">Música</div>
-                                    <ul>
-                                        <li class="music">Rock</li>
-                                        <li class="book">Drama</li>
-                                        <li class="movie">Suspense</li>
-                                    </ul>
-                                    <div>
-                                        <a class="recommend-link" href="">Aceitar</a>
-                                        <a class="remove-link" href="">Recusar</a>
-                                    </div>
-                                </li>
-                                <li class="list-item">
-                                    <img src="../assets/img/circle-user-solid.svg">
-                                    <div>Apelido</div>
-                                    <div class="music">Música</div>
-                                    <ul>
-                                        <li class="music">Rock</li>
-                                        <li class="book">Drama</li>
-                                        <li class="movie">Suspense</li>
-                                    </ul>
-                                    <div>
-                                        <a class="recommend-link" href="">Aceitar</a>
-                                        <a class="remove-link" href="">Recusar</a>
-                                    </div>
-                                </li>
-                                <li class="list-item">
-                                    <img src="../assets/img/circle-user-solid.svg">
-                                    <div>Apelido</div>
-                                    <div class="music">Música</div>
-                                    <ul>
-                                        <li class="music">Rock</li>
-                                        <li class="book">Drama</li>
-                                        <li class="movie">Suspense</li>
-                                    </ul>
-                                    <div>
-                                        <a class="recommend-link" href="">Aceitar</a>
-                                        <a class="remove-link" href="">Recusar</a>
-                                    </div>
-                                </li>
-                                <li class="list-item">
-                                    <img src="../assets/img/circle-user-solid.svg">
-                                    <div>Apelido</div>
-                                    <div class="music">Música</div>
-                                    <ul>
-                                        <li class="music">Rock</li>
-                                        <li class="book">Drama</li>
-                                        <li class="movie">Suspense</li>
-                                    </ul>
-                                    <div>
-                                        <a class="recommend-link" href="">Aceitar</a>
-                                        <a class="remove-link" href="">Recusar</a>
-                                    </div>
-                                </li>
-                                <li class="list-item">
-                                    <img src="../assets/img/circle-user-solid.svg">
-                                    <div>Apelido</div>
-                                    <div class="music">Música</div>
-                                    <ul>
-                                        <li class="music">Rock</li>
-                                        <li class="book">Drama</li>
-                                        <li class="movie">Suspense</li>
-                                    </ul>
-                                    <div>
-                                        <a class="recommend-link" href="">Aceitar</a>
-                                        <a class="remove-link" href="">Recusar</a>
-                                    </div>
-                                </li> -->
-                            </ul>
+                            <ul id="ulReceivedRequests" class="list friends"></ul>
                         </div>
                     </div>
                 </div>
@@ -251,6 +97,194 @@
         btnFriends.classList.add('selected');
     }
 
+    function loadFriends() {
+        getAllFriends();
+        getAllReceivedRequests();
+    }
+</script>
+<script>
+    function getAllFriends() {
+        fetch(`/friendships/friends/${user.idUsuario}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            },
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(json => {
+                    var header = document.createElement('li');
+                    header.classList.add('list-item');
+
+                    header.innerHTML = `
+                        <div>Amigo</div>
+                        <div>Apelido</div>
+                        <div>Item</div>
+                        <div>Preferência</div>
+                        <div>Operações</div>
+                    `;
+
+                    document.getElementById('ulFriends').appendChild(header);
+
+                    json.forEach(friendship => {
+                        var typeClass = '';
+
+                        switch (friendship.tipoPreferido) {
+                            case 'Música':
+                                typeClass = 'music';
+                                break;
+                            case 'Livro':
+                                typeClass = 'book';
+                                break;
+                            case 'Filme':
+                                typeClass = 'movie';
+                                break;
+                        }
+
+                        renderFriendship(friendship, typeClass);
+                    });
+                });
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro carregar solicitações de amizade recebidas!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                throw new Error('Houve um erro carregar solicitações de amizade recebidas!');
+            }
+        }).catch(error => {
+            console.error(`ERRO: `, error);
+        });
+    }
+
+    function renderFriendship(friendship, typeClass) {
+        var element = document.createElement('li');
+        element.classList.add('list-item');
+        element.id = `liFriendship#${friendship.idAmigo}`;
+
+        var imgElement = document.createElement('img');
+        imgElement.src = '../assets/img/circle-user-solid.svg';
+
+        var liNickname = document.createElement('li');
+        liNickname.innerText = friendship.apelido;
+
+        var liName = document.createElement('li');
+        liName.innerText = friendship.nome;
+
+        var ulNames = document.createElement('ul');
+        ulNames.appendChild(liNickname);
+        ulNames.appendChild(liName);
+
+        var favoriteType = document.createElement('div');
+        favoriteType.innerText = friendship.tipoPreferido == null ? 'Não definido' : friendship.tipoPreferido;
+        if (typeClass != '') {
+            favoriteType.classList.add(typeClass);
+        }
+
+        var liMusicGenre = document.createElement('li');
+        liMusicGenre.classList.add('music');
+        liMusicGenre.innerText = friendship.generoMusica == null ? 'Não definido' : friendship.generoMusica;
+
+        var liBookGenre = document.createElement('li');
+        liBookGenre.classList.add('book');
+        liBookGenre.innerText = friendship.generoLivro == null ? 'Não definido' : friendship.generoLivro;
+
+        var liMovieGenre = document.createElement('li');
+        liMovieGenre.classList.add('movie');
+        liMovieGenre.innerText = friendship.generoFilme == null ? 'Não definido' : friendship.generoFilme;
+
+        var ulPreferences = document.createElement('ul');
+        ulPreferences.appendChild(liMusicGenre);
+        ulPreferences.appendChild(liBookGenre);
+        ulPreferences.appendChild(liMovieGenre);
+
+        var recommendElement = document.createElement('a');
+        recommendElement.classList.add('recommend-link');
+        recommendElement.innerText = 'Indicar';
+
+        var removeElement = document.createElement('a');
+        removeElement.classList.add('remove-link');
+        removeElement.innerText = 'Excluir';
+        removeElement.addEventListener('click', function (event) {
+            handleEndFriendship(friendship);
+        })
+
+        var decisionDiv = document.createElement('div');
+        decisionDiv.appendChild(recommendElement);
+        decisionDiv.appendChild(removeElement);
+
+        element.appendChild(imgElement);
+        element.appendChild(ulNames);
+        element.appendChild(favoriteType);
+        element.appendChild(ulPreferences);
+        element.appendChild(decisionDiv);
+
+        document.getElementById('ulFriends').appendChild(element);
+    }
+
+    function handleEndFriendship(friendship) {
+        Swal.fire({
+            title: 'Excluir amizade',
+            icon: 'warning',
+            text: `Tem certeza que deseja excluir sua amizade com "${friendship.apelido}"?`,
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Recusar amizade',
+            focusConfirm: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                endFriendship(friendship.idAmigo, friendship.papel);
+            }
+        })
+    }
+
+    function endFriendship(idFriend, role) {
+        var paramsString = '';
+        
+        if (role == 'Amigo') {
+            paramsString = `${user.idUsuario}&${idFriend}`
+        } else {
+            paramsString = `${idFriend}&${user.idUsuario}`
+        }
+
+        fetch(`/friendships/friends/${paramsString}`, {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json"
+            },
+        }).then(response => {
+            if (response.ok) {
+                var deletedFriendship = document.getElementById(`liFriendship#${idFriend}`);
+                deletedFriendship.parentNode.removeChild(deletedFriendship);
+
+                Swal.fire({
+                    title: 'Sucesso!',
+                    text: 'Amizade excluída com sucesso',
+                    icon: 'success',
+                    timer: 1750,
+                    timerProgressBar: true,
+                    confirmButtonColor: '#6BF178',                    
+                });
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro excluir amizade!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                throw new Error('Houve um erro excluir amizade!');
+            }
+        }).catch(error => {            
+            console.error(`ERRO: `, error);
+        });
+    }
+</script>
+<script>
     function sendFriendshipRequest() {
         var nicknameVar = txtNickname.value;
 
@@ -328,10 +362,6 @@
         });
     }
 
-    function loadFriends() {
-        getAllReceivedRequests();
-    }
-
     function getAllReceivedRequests() {
         fetch(`/friendships/requests/${user.idUsuario}`, {
             method: 'GET',
@@ -400,8 +430,10 @@
         nicknameDiv.innerText = receivedRequest.apelido;
 
         var favoriteType = document.createElement('div');
-        favoriteType.classList.add(typeClass);
-        favoriteType.innerText = receivedRequest.tipoPreferido;
+        favoriteType.innerText = receivedRequest.tipoPreferido == null ? 'Não definido' : receivedRequest.tipoPreferido;
+        if (typeClass != '') {
+            favoriteType.classList.add(typeClass);
+        }
 
         var liMusicGenre = document.createElement('li');
         liMusicGenre.classList.add('music');
@@ -423,10 +455,16 @@
         var acceptElement = document.createElement('a');
         acceptElement.classList.add('recommend-link');
         acceptElement.innerText = 'Aceitar';
+        acceptElement.addEventListener('click', function (event) {
+            handleAcceptFriendshipRequest(receivedRequest);
+        })
 
         var refuseElement = document.createElement('a');
         refuseElement.classList.add('remove-link');
         refuseElement.innerText = 'Recusar';
+        refuseElement.addEventListener('click', function (event) {
+            handleRefuseFriendshipRequest(receivedRequest);
+        })
 
         var decisionDiv = document.createElement('div');
         decisionDiv.appendChild(acceptElement);
@@ -439,5 +477,107 @@
         element.appendChild(decisionDiv);
 
         document.getElementById('ulReceivedRequests').appendChild(element);
+    }
+
+    function handleRefuseFriendshipRequest(receivedRequest) {
+        Swal.fire({
+            title: 'Recusar solicitação de amizade',
+            icon: 'warning',
+            text: `Tem certeza que deseja recusar a solicitação de amizade de "${receivedRequest.apelido}"?`,
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Recusar amizade',
+            focusConfirm: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                refuseFriendshipRequest(receivedRequest.idUsuario);
+            }
+        })
+    }
+
+    function refuseFriendshipRequest(idUsuario) {
+        fetch(`/friendships/requests/refuse/${user.idUsuario}&${idUsuario}`, {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json"
+            },
+        }).then(response => {
+            if (response.ok) {
+                var refusedRequest = document.getElementById(`liReceivedRequest#${idUsuario}`);
+                refusedRequest.parentNode.removeChild(refusedRequest);
+
+                Swal.fire({
+                    title: 'Sucesso!',
+                    text: 'Solicitação de amizade recusada com sucesso',
+                    icon: 'success',
+                    timer: 1750,
+                    timerProgressBar: true,
+                    confirmButtonColor: '#6BF178',                    
+                });
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro recusar solicitação de amizade!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                throw new Error('Houve um erro recusar solicitação de amizade!');
+            }
+        }).catch(error => {            
+            console.error(`ERRO: `, error);
+        });
+    }
+
+    function handleAcceptFriendshipRequest(receivedRequest) {
+        Swal.fire({
+            title: 'Aceitar solicitação de amizade',
+            text: `Deseja aceitar a solicitação de amizade de ${receivedRequest.apelido}?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#6BF178',
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                acceptFriendshipRequest(receivedRequest.idUsuario)
+            }
+        })
+    }
+
+    function acceptFriendshipRequest(idUsuario) {
+        fetch(`/friendships/requests/accept/${user.idUsuario}&${idUsuario}`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json"
+            },
+        }).then(response => {
+            if (response.ok) {
+                var acceptedRequest = document.getElementById(`liReceivedRequest#${idUsuario}`);
+                acceptedRequest.parentNode.removeChild(acceptedRequest);
+
+                Swal.fire({
+                    title: 'Sucesso!',
+                    text: 'Vocês são amigos agora!',
+                    icon: 'success',
+                    timer: 1750,
+                    timerProgressBar: true,
+                    confirmButtonColor: '#6BF178',                    
+                });
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro aceitar solicitação de amizade!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                throw new Error('Houve um erro aceitar solicitação de amizade!');
+            }
+        }).catch(error => {            
+            console.error(`ERRO: `, error);
+        });
     }
 </script>
