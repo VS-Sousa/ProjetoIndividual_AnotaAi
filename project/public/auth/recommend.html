@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../assets/img/logo.png" type="image/x-icon">
     <title>INDICAR - AnotaAí!</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js" integrity="sha512-F+u8eWHrfY8Xw9BLzZ8rG/0wIvs0y+JyRJrXjp3VjtFPylAEEGwKbua5Ip/oiVhaTDaDs4eU2Xtsxjs/9ag2bQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> 
@@ -73,7 +74,7 @@
                         </ul>
                     </div>
                     <div id="divBtnRecommend">
-                        <button id="btnRecommend">Anota Aí!</button>
+                        <button id="btnRecommend" onclick="handleSendRecommendation()">Anota Aí!</button>
                     </div>
                     <div class="card item">
                         <div class="heading-underline">
@@ -120,7 +121,7 @@
                             title: 'Aviso',
                             text: 'Você precisa de no minímo um amigo ou um item em sua lista para indicar',
                             icon: 'warning',
-                            timer: 2000,
+                            timer: 1500,
                             timerProgressBar: true,
                             confirmButtonColor: '#6BF178',
                             willClose: () => {
@@ -257,5 +258,97 @@
         document.getElementById('h2ItemTitle').innerText = item.titulo;
         document.getElementById('pItemCreator').innerText = item.criador;
         document.getElementById('pItemGenre').innerText = item.genero;
+    }
+
+    function handleSendRecommendation() {
+        var selectedFriendId = Number(cmbFriends.value);
+
+        var friend = data.friends.find(f => {
+            if (f.idAmigo == selectedFriendId) {
+                return f;
+            }
+        });
+
+        var selectedItemId = Number(cmbItems.value);
+
+        var item = data.items.find(i => {
+            if (i.idItem == selectedItemId) {
+                return i;
+            }
+        });
+
+        Swal.fire({
+            title: 'Recomendar item para amigo',
+            icon: 'question',
+            text: `Deseja recomendar "${item.titulo}" por ${item.criador} para ${friend.apelido}?`,
+            showCancelButton: true,
+            confirmButtonColor: '#6BF178',
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                sendRecommendation(item.idItem, friend.idAmigo);
+            }
+        })
+    }
+
+    function sendRecommendation(idItem, idFriend) {
+        fetch(`/recommendations/${user.idUsuario}`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idItemServer: idItem,
+                idFriendServer: idFriend,
+                recommendationDateServer: dateFns.format(new Date(), 'YYYY-MM-DD')
+            })
+        }).then(response => {
+            if (response.ok) {
+                Swal.fire({
+                    title: 'Sucesso!',
+                    text: 'Recomendação realizada com sucesso',
+                    icon: 'success',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    confirmButtonColor: '#6BF178',
+                    willClose: () => {
+                        window.location = './recommendations.html';
+                    }
+                });
+                return;
+            } else if (response.status == 403) {
+                response.text().then(errorMessage => {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: errorMessage,
+                        icon: 'error',
+                        showConfirmButton: false,
+                        showDenyButton: true,
+                        denyButtonText: 'OK'
+                    });
+                    throw new Error(errorMessage);  
+                })
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao recomendar item ao amigo!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                throw new Error('Houve um erro ao recomendar item ao amigo!');
+            }
+        }).catch(error => {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao recomendar item ao amigo!',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.error(`ERRO: `, error);
+        })
     }
 </script>

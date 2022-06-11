@@ -67,11 +67,12 @@ CREATE TABLE Indicacao (
     fkAmigo INT NOT NULL,
     CONSTRAINT FK_Indicacao_fkAmigo FOREIGN KEY (fkAmigo) REFERENCES Usuario (idUsuario),
     
-    dataIndicacao INT NOT NULL,
+    dataIndicacao DATE NOT NULL,
     PRIMARY KEY (fkUsuario, fkItem, fkAmigo, dataIndicacao)
 );
 
 INSERT INTO Usuario (nome, email, apelido, senha) VALUES ('Vinícius da Silva Sousa', 'vinicius.sousa@sptech.school', 'VS-Sousa', SHA2('MinhaSenhaSegura', 512));
+INSERT INTO Usuario (nome, email, apelido, senha) VALUES ('Laura da Silva Sousa', 'laura.sousa@email.com', 'LauraDaves', SHA2('LufanaVerde', 512));
 
 SELECT * FROM Usuario;
 
@@ -109,16 +110,27 @@ INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('A.I. - Inteligência A
 SELECT * FROM Item;
 
 SELECT 
-	ag.idUsuario, 
+	az.fkUsuario as 'idAmigo', 
+    ag.nome,
     ag.apelido,
 	(SELECT i.tipo FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = ag.idUsuario GROUP BY i.tipo ORDER BY COUNT(i.tipo) DESC LIMIT 1)
     as 'tipoPreferido',
-    (SELECT i.genero FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = ag.idUsuario AND tipo = 'Música' GROUP BY i.genero ORDER BY COUNT(i.genero) DESC LIMIT 1)
-    as 'generoMusica',
-    (SELECT i.genero FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = ag.idUsuario AND tipo = 'Livro' GROUP BY i.genero ORDER BY COUNT(i.genero) DESC LIMIT 1)
-    as 'generoLivro',
-    (SELECT i.genero FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = ag.idUsuario AND tipo = 'Filme' GROUP BY i.genero ORDER BY COUNT(i.genero) DESC LIMIT 1)
-    as 'generoFilme'
+    (SELECT i.genero FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = ag.idUsuario AND tipo = tipoPreferido GROUP BY i.genero ORDER BY COUNT(i.genero) DESC LIMIT 1)
+    as 'generoPreferido',
+    'Amigo' as 'papel'
 FROM Amizade az
 INNER JOIN Usuario ag ON ag.idUsuario = az.fkUsuario
-WHERE fkAmigo = 1 AND az.situacao = 'Pendente';
+WHERE fkAmigo = 2 AND az.situacao = 'Amigo'
+	UNION
+SELECT 
+	az.fkAmigo as 'idAmigo', 
+    ag.nome,
+    ag.apelido,
+	(SELECT i.tipo FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = az.fkAmigo GROUP BY i.tipo ORDER BY COUNT(i.tipo) DESC LIMIT 1)
+    as 'tipoPreferido',
+    (SELECT i.genero FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = az.fkAmigo AND tipo = tipoPreferido GROUP BY i.genero ORDER BY COUNT(i.genero) DESC LIMIT 1)
+    as 'generoPreferido',
+    'Usuario' as 'papel'
+FROM Amizade az
+INNER JOIN Usuario ag ON ag.idUsuario = az.fkAmigo
+WHERE fkUsuario = 2 AND az.situacao = 'Amigo';
