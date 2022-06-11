@@ -971,8 +971,13 @@ span.fav-movie {
     font-weight: bold;
 }
 
-#cmbFriends, #cmbItems {
-    margin: 10px 0;
+.select2-container-div {
+    margin: 20px 0;
+    width: 100%;
+}
+
+.select2-container-div select {
+    width: 100%;
 }
 
 #divBtnRecommend {

@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../assets/img/logo.png" type="image/x-icon">
     <title>INDICAR - AnotaAí!</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Yellowtail&display=swap" rel="stylesheet">
@@ -13,7 +16,7 @@
     <script src="../assets/js/auth.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body onload="verifyAuth()">
+<body onload="verifyAuth(); getItemsAndFriends()">
     <header class="header">
         <nav class="navbar container">
             <a class="logo" href="./index.html">
@@ -56,19 +59,17 @@
                         <div class="heading-underline">
                             <h1>Amigo</h1>
                         </div>
-                        <div>
-                            <select id="cmbFriends">
-                                <option value="">VS-Sousa | Vinícius Sousa</option>
-                            </select>
+                        <div class="select2-container-div">
+                            <select id="cmbFriends" onchange="renderSelectedFriend()" class="js-example-basic-single"></select>
                         </div>
                         <div>
                             <img src="../assets/img/circle-user-solid.svg">
                         </div>
                         <ul>
-                            <li>Nome</li>
-                            <li>Apelido</li>
-                            <li>Música</li>
-                            <li>Rock</li>
+                            <li id="liFriendName">Nome</li>
+                            <li id="liFriendNickname">Apelido</li>
+                            <li id="liFriendFavoriteType">Música</li>
+                            <li id="liFriendFavoriteGenre">Rock</li>
                         </ul>
                     </div>
                     <div id="divBtnRecommend">
@@ -78,19 +79,17 @@
                         <div class="heading-underline">
                             <h1>Item</h1>
                         </div>
-                        <div>
-                            <select id="cmbItems">
-                                <option value="">VS-Sousa | Vinícius Sousa</option>
-                            </select>
+                        <div class="select2-container-div">
+                            <select id="cmbItems" onchange="renderSelectedItem()" class="js-example-basic-single"></select>
                         </div>
-                        <div class="item-card movie">
-                            <h3>Filme</h3>
+                        <div id="divItemCard" class="item-card">
+                            <h3 id="h3ItemType"></h3>
                             <div class="photo">
-                                <img src="../assets/img/clapperboard.png" alt="Filme">
+                                <img id="imgItem" src="../assets/img/clapperboard.png">
                             </div>
-                            <h2>Taxi Driver</h2>
-                            <p>Martin Scorcese</p>
-                            <p>Drama</p>
+                            <h2 id="h2ItemTitle"></h2>
+                            <p id="pItemCreator"></p>
+                            <p id="pItemGenre"></p>
                         </div>
                     </div>
                 </div>
@@ -99,3 +98,164 @@
     </main>
 </body>
 </html>
+<script>
+    var data = {
+        friends: [],
+        items: []
+    }
+
+    function getItemsAndFriends() {
+        fetch(`/recommendations/set-up/${user.idUsuario}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => {
+            if (response.ok) {
+               response.json().then(json => {
+                    data = json;
+
+                    if (data.friends.length <= 0 || data.items.length <= 0) {
+                        Swal.fire({
+                            title: 'Aviso',
+                            text: 'Você precisa de no minímo um amigo ou um item em sua lista para indicar',
+                            icon: 'warning',
+                            timer: 2000,
+                            timerProgressBar: true,
+                            confirmButtonColor: '#6BF178',
+                            willClose: () => {
+                                window.location = './recommendations.html';
+                            }
+                        });
+                        return;
+                    }
+
+                    data.friends.forEach(friend => {
+                        renderFriendOption(friend);
+                    });
+                    renderSelectedFriend();
+
+                    renderItemOptions(data.items);
+                    renderSelectedItem();
+
+                    $('.js-example-basic-single').select2();                    
+               });
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os items!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                }); 
+                throw new Error('Houve um erro ao carregar os items!');
+            }
+        }).catch(error => {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao carregar os items e amigos!',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.error(`ERRO: `, error);
+        })
+    }
+
+    function renderFriendOption(friend) {
+        var element = document.createElement('option');
+        element.innerText = `${friend.apelido} | ${friend.nome}`;
+        element.value = friend.idAmigo;
+
+        document.getElementById('cmbFriends').appendChild(element);
+    }
+
+    function renderItemOptions(items) {
+        var musicsGroup = document.createElement('optgroup');
+        musicsGroup.label = 'Músicas';
+
+        var booksGroup = document.createElement('optgroup');
+        booksGroup.label = 'Livros';
+
+        var moviesGroup = document.createElement('optgroup');
+        moviesGroup.label = 'Filmes';
+
+        items.forEach(item => {
+            var element = document.createElement('option');
+            element.innerText = `${item.titulo} | ${item.criador} | ${item.genero}`;
+            element.value = item.idItem;
+
+            switch (item.tipo) {
+                case 'Música':
+                    musicsGroup.appendChild(element);
+                    break;
+                case 'Livro':
+                    booksGroup.appendChild(element);
+                    break;
+                case 'Filme':
+                    moviesGroup.appendChild(element);
+                    break;
+            }
+        });
+
+        document.getElementById('cmbItems').appendChild(musicsGroup);
+        document.getElementById('cmbItems').appendChild(booksGroup);
+        document.getElementById('cmbItems').appendChild(moviesGroup);
+    }
+
+    function renderSelectedFriend() {
+        var selectedFriendId = Number(cmbFriends.value);
+
+        var friend = data.friends.find(f => {
+            if (f.idAmigo == selectedFriendId) {
+                return f;
+            }
+        });
+
+        document.getElementById('liFriendName').innerText = friend.nome;
+        document.getElementById('liFriendNickname').innerText = friend.apelido;
+        document.getElementById('liFriendFavoriteType').innerText = friend.tipoPreferido;
+        document.getElementById('liFriendFavoriteGenre').innerText = friend.generoPreferido;
+    }
+
+    function renderSelectedItem() {
+        var selectedItemId = Number(cmbItems.value);
+
+        var item = data.items.find(i => {
+            if (i.idItem == selectedItemId) {
+                return i;
+            }
+        });
+
+        var typeClass = ''
+        var imgSrc = ''
+
+        switch (item.tipo) {
+            case 'Música':
+                typeClass = 'music';
+                imgSrc = 'music';
+                break;
+            case 'Livro':
+                typeClass = 'book';
+                imgSrc = 'livro';
+                break;
+            case 'Filme':
+                typeClass = 'movie';
+                imgSrc = 'clapperboard';
+                break;
+        }
+
+        document.getElementById('divItemCard').classList.remove('music');
+        document.getElementById('divItemCard').classList.remove('book');
+        document.getElementById('divItemCard').classList.remove('movie');
+        document.getElementById('divItemCard').classList.add(typeClass);
+
+        document.getElementById('h3ItemType').innerText = item.tipo;
+        document.getElementById('imgItem').src = `../assets/img/${imgSrc}.png`;
+        document.getElementById('h2ItemTitle').innerText = item.titulo;
+        document.getElementById('pItemCreator').innerText = item.criador;
+        document.getElementById('pItemGenre').innerText = item.genero;
+    }
+</script>
