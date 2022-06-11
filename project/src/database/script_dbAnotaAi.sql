@@ -108,4 +108,17 @@ INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('A.I. - Inteligência A
 
 SELECT * FROM Item;
 
-SELECT i.idItem, i.titulo, i.criador, i.genero, i.tipo, l.situacao FROM Lista l INNER JOIN Item i ON l.fkItem = i.idItem WHERE l.fkUsuario = 1;
+SELECT 
+	ag.idUsuario, 
+    ag.apelido,
+	(SELECT i.tipo FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = ag.idUsuario GROUP BY i.tipo ORDER BY COUNT(i.tipo) DESC LIMIT 1)
+    as 'tipoPreferido',
+    (SELECT i.genero FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = ag.idUsuario AND tipo = 'Música' GROUP BY i.genero ORDER BY COUNT(i.genero) DESC LIMIT 1)
+    as 'generoMusica',
+    (SELECT i.genero FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = ag.idUsuario AND tipo = 'Livro' GROUP BY i.genero ORDER BY COUNT(i.genero) DESC LIMIT 1)
+    as 'generoLivro',
+    (SELECT i.genero FROM Lista l INNER JOIN Item i ON i.idItem = l.fkItem WHERE l.fkUsuario = ag.idUsuario AND tipo = 'Filme' GROUP BY i.genero ORDER BY COUNT(i.genero) DESC LIMIT 1)
+    as 'generoFilme'
+FROM Amizade az
+INNER JOIN Usuario ag ON ag.idUsuario = az.fkAmigo
+WHERE fkUsuario = 1 AND az.situacao = 'Pendente';

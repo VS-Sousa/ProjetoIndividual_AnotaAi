@@ -40,10 +40,28 @@ function sendFriendshipRequest(request, response) {
         }).catch(error => {
             console.log(error);
             console.log("\nHouve um erro ao enviar solicitação de amizade! Erro: ", error.sqlMessage);
+            response.status(500).json(error.sqlMessage);
+        });
+    }
+}
+
+function getAllReceivedRequests(request, response) {
+    var idUser = request.params.idUser;
+
+    if (idUser == undefined) {
+        response.status(403).send('Id do Usuário está indefinido!');
+    } else {
+        friendshipModel.getAllReceivedRequests(idUser).then(result => {
+            response.json(result);
+        }).catch(error => {
+            console.log(error);
+            console.log("\nHouve um erro ao recuperar solicitações de amizade recebidas! Erro: ", error.sqlMessage);
+            response.status(500).json(error.sqlMessage);
         });
     }
 }
 
 module.exports = {
-    sendFriendshipRequest
+    sendFriendshipRequest,
+    getAllReceivedRequests
 }

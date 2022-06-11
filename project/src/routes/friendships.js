@@ -7,4 +7,8 @@ router.post("/requests", function (request, response) {
     friendshipController.sendFriendshipRequest(request, response);
 });
 
+router.get('/requests/:idUser', function (request, response) {
+    friendshipController.getAllReceivedRequests(request, response);
+})
+
 module.exports = router;

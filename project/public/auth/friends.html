@@ -14,7 +14,7 @@
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/validations.js"></script>
 </head>
-<body onload="verifyAuth()">
+<body onload="verifyAuth(); getAllReceivedRequests()">
     <header class="header">
         <nav class="navbar container">
             <a class="logo" href="./index.html">
@@ -147,15 +147,15 @@
                                     <button id="btnSendFriendshipRequest" onclick="sendFriendshipRequest()" class="btn-send">Enviar solicitação</button>
                                 </div>
                             </div>
-                            <ul class="list friends">
-                                <li class="list-item">
+                            <ul id="ulReceivedRequests" class="list friends">
+                                <!-- <li class="list-item">
                                     <div>Amigo</div>
                                     <div>Apelido</div>
                                     <div>Item</div>
                                     <div>Preferência</div>
                                     <div>Operações</div>
-                                </li>
-                                <li class="list-item">
+                                </li> -->
+                                <!-- <li class="list-item">
                                     <img src="../assets/img/circle-user-solid.svg">
                                     <div>Apelido</div>
                                     <div class="music">Música</div>
@@ -224,7 +224,7 @@
                                         <a class="recommend-link" href="">Aceitar</a>
                                         <a class="remove-link" href="">Recusar</a>
                                     </div>
-                                </li>
+                                </li> -->
                             </ul>
                         </div>
                     </div>
@@ -326,5 +326,118 @@
         }).catch(error => {            
             console.error(`ERRO: `, error);
         });
+    }
+
+    function loadFriends() {
+        getAllReceivedRequests();
+    }
+
+    function getAllReceivedRequests() {
+        fetch(`/friendships/requests/${user.idUsuario}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            },
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(json => {
+                    var header = document.createElement('li');
+                    header.classList.add('list-item');
+
+                    header.innerHTML = `
+                        <div>Amigo</div>
+                        <div>Apelido</div>
+                        <div>Item</div>
+                        <div>Preferência</div>
+                        <div>Operações</div>
+                    `;
+
+                    document.getElementById('ulReceivedRequests').appendChild(header);
+
+                    json.forEach(receivedRequest => {
+                        var typeClass = '';
+
+                        switch (receivedRequest.tipoPreferido) {
+                            case 'Música':
+                                typeClass = 'music';
+                                break;
+                            case 'Livro':
+                                typeClass = 'book';
+                                break;
+                            case 'Filme':
+                                typeClass = 'movie';
+                                break;
+                        }
+
+                        renderReceivedRequest(receivedRequest, typeClass);
+                    });
+                });
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro carregar solicitações de amizade recebidas!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                throw new Error('Houve um erro carregar solicitações de amizade recebidas!');
+            }
+        }).catch(error => {            
+            console.error(`ERRO: `, error);
+        });
+    }
+
+    function renderReceivedRequest(receivedRequest, typeClass) {
+        var element = document.createElement('li');
+        element.classList.add('list-item');
+        element.id = `liReceivedRequest#${receivedRequest.idUsuario}`;
+
+        var imgElement = document.createElement('img');
+        imgElement.src = '../assets/img/circle-user-solid.svg';
+
+        var nicknameDiv = document.createElement('div');
+        nicknameDiv.innerText = receivedRequest.apelido;
+
+        var favoriteType = document.createElement('div');
+        favoriteType.classList.add(typeClass);
+        favoriteType.innerText = receivedRequest.tipoPreferido;
+
+        var liMusicGenre = document.createElement('li');
+        liMusicGenre.classList.add('music');
+        liMusicGenre.innerText = receivedRequest.generoMusica == null ? 'Não definido' : receivedRequest.generoMusica;
+
+        var liBookGenre = document.createElement('li');
+        liBookGenre.classList.add('book');
+        liBookGenre.innerText = receivedRequest.generoLivro == null ? 'Não definido' : receivedRequest.generoLivro;
+
+        var liMovieGenre = document.createElement('li');
+        liMovieGenre.classList.add('movie');
+        liMovieGenre.innerText = receivedRequest.generoFilme == null ? 'Não definido' : receivedRequest.generoFilme;
+
+        var ulPreferences = document.createElement('ul');
+        ulPreferences.appendChild(liMusicGenre);
+        ulPreferences.appendChild(liBookGenre);
+        ulPreferences.appendChild(liMovieGenre);
+
+        var acceptElement = document.createElement('a');
+        acceptElement.classList.add('recommend-link');
+        acceptElement.innerText = 'Aceitar';
+
+        var refuseElement = document.createElement('a');
+        refuseElement.classList.add('remove-link');
+        refuseElement.innerText = 'Recusar';
+
+        var decisionDiv = document.createElement('div');
+        decisionDiv.appendChild(acceptElement);
+        decisionDiv.appendChild(refuseElement);
+
+        element.appendChild(imgElement);
+        element.appendChild(nicknameDiv);
+        element.appendChild(favoriteType);
+        element.appendChild(ulPreferences);
+        element.appendChild(decisionDiv);
+
+        document.getElementById('ulReceivedRequests').appendChild(element);
     }
 </script>
