@@ -54,7 +54,65 @@ function getAllItemsFromUserList(request, response) {
     }
 }
 
+function updateStatus(request, response) {
+    var idUser = request.params.idUser;
+    var idItem = request.body.idItemServer;
+    var oldStatus = request.body.oldStatusServer;
+    var newStatus = request.body.newStatusServer;
+
+    if (idUser == undefined) {
+        response.status(400).send('Id do Usuário está indefinido');
+    } else if (idItem == undefined) {
+        response.status(400).send('Id do Item está indefinido');
+    } else if (oldStatus == undefined) {
+        response.status(400).send('Antiga situacao está indefinida');
+    } else if (newStatus == undefined) {
+        response.status(400).send('Nova situacao está indefinida');
+    } else {
+        listModel.updateStatus(idUser, idItem, newStatus, oldStatus).then(result => {
+            var hasUpdated = result.affectedRows;
+
+            if (hasUpdated != 1) {
+                throw new Error('Houve um errro ao mudar a situação do item!');
+            }
+
+            response.json(result);
+        }).catch(error => {
+            console.log(error);
+            console.log("\nHouve um errro ao mudar a situação do item! Erro: ", error.sqlMessage);
+            response.status(500).json(error.sqlMessage);
+        })
+    }
+}
+
+function removeItemFromList(request, response) {
+    var idUser = request.params.idUser;
+    var idItem = request.params.idItem;
+
+    if (idUser == undefined) {
+        response.status(400).send('Id do Usuário está indefinido');
+    } else if (idItem == undefined) {
+        response.status(400).send('Id do Item está indefinido');
+    } else {
+        listModel.removeItemFromList(idUser, idItem).then(result => {
+            var hasRemoved = result.affectedRows;
+
+            if (hasRemoved != 1) {
+                throw new Error('Houve um errro ao remover item da lista!');
+            }
+
+            response.json(result);
+        }).catch(error => {
+            console.log(error);
+            console.log("\nHouve um errro ao remover item da lista! Erro: ", error.sqlMessage);
+            response.status(500).json(error.sqlMessage);
+        });
+    }
+}
+
 module.exports = {
     addToList,
-    getAllItemsFromUserList
+    getAllItemsFromUserList,
+    updateStatus,
+    removeItemFromList
 }

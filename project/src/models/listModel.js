@@ -33,8 +33,46 @@ function getItemsFromListByUserId(idUser) {
     return database.executar(query);
 }
 
+function updateStatus(idUser, idItem, newStatus, oldStatus) {
+    console.log("ACESSEI O LISTA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function addToList():", idUser, idItem,  newStatus, oldStatus);
+
+    var query = `UPDATE Lista SET situacao = '${newStatus}', `;
+
+    if (oldStatus == 'Pendente' && newStatus == 'Progresso') {
+        query += ` iniciado = now() `;
+    } else if (oldStatus == 'Pendente' && newStatus == 'Finalizado') {
+        query += ` iniciado = now(), finalizado = now() `;
+    } else if (oldStatus == 'Progresso' && newStatus == 'Finalizado') {
+        query += ` finalizado = now() `;
+    } else if (oldStatus == 'Progresso' && newStatus == 'Pendente') {
+        query += ` iniciado = null, adicionado = now() `;
+    } else if (oldStatus == 'Finalizado' && newStatus == 'Progresso') {
+        query += ` finalizado = null, iniciado = now() `;
+    } else if (oldStatus == 'Finalizado' && newStatus == 'Pendente') {
+        query += ` finalizado = null, iniciado = null, adicionado = now() `;
+    }
+
+    query += ` WHERE fkUsuario = ${idUser} AND fkItem = ${idItem}`;
+
+    console.log('Executando a query: \n', query)
+    return database.executar(query);
+}
+
+function removeItemFromList(idUser, idItem) {
+    console.log("ACESSEI O LISTA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function removeItemFromList():", idUser, idItem);
+
+    var query = `
+        DELETE FROM Lista WHERE fkUsuario = ${idUser} AND fkItem = ${idItem};
+    `;
+
+    console.log('Executando a query: \n', query)
+    return database.executar(query);
+}
+
 module.exports = {
     verifyIfAlreadyInList,
     addToList,
-    getItemsFromListByUserId
+    getItemsFromListByUserId,
+    updateStatus,
+    removeItemFromList
 }

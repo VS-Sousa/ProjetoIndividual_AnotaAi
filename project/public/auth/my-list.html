@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Yellowtail&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
     <script src="../assets/js/auth.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body onload="verifyAuth(); getMyListItems()">
     <header class="header">
@@ -143,7 +144,7 @@
                                 statusKPI.progress++
                                 statusSrc = 'progress';
                                 break;
-                            case 'Concluido':
+                            case 'Finalizado':
                                 statusKPI.finished++;
                                 statusSrc = 'finished';
                                 break;
@@ -181,22 +182,52 @@
     function renderItem(item, typeClass, statusSrc) {
         var element = document.createElement('li');
         element.classList.add('list-item');
+        element.id = `liListItem#${item.idItem}`;
 
-        element.innerHTML = `
-            <div>${item.titulo}</div>
-            <div>${item.criador}</div>
-            <div>${item.genero}</div>
-            <div class="${typeClass}">${item.tipo}</div>
-            <img src="../assets/img/status-${statusSrc}.svg" alt="">
-            <div>
-                <a id="aRecommend" href="">Indicar</a>
-                <a id="aRemove" href="">Remover</a>
-            </div>
-        `;
+        var titleDiv = document.createElement('div');
+        titleDiv.innerText = item.titulo;
+
+        var creatorDiv = document.createElement('div');
+        creatorDiv.innerText = item.criador;
+
+        var genreDiv = document.createElement('div');
+        genreDiv.innerText = item.genero;
+
+        var typeDiv = document.createElement('div');
+        typeDiv.classList.add(typeClass)
+        typeDiv.innerText = item.tipo;
+        
+        var imgElement = document.createElement('img');
+        imgElement.id = `imgListItemStatus#${item.idItem}`;
+        imgElement.src = `../assets/img/status-${statusSrc}.svg`;
+        imgElement.addEventListener('click', function (event) {
+            handleStatusChange(item);
+        })
+
+        var recommendElement = document.createElement('a');
+        recommendElement.classList.add('recommend-link');
+        recommendElement.innerText = 'Indicar';
+
+        var removeElement = document.createElement('a');
+        removeElement.classList.add('remove-link');
+        removeElement.addEventListener('click', function (event) {
+            handleDeleteItemFromList(item);
+        })
+        removeElement.innerText = 'Remover';
+
+        var divLinksElement = document.createElement('div');
+        divLinksElement.appendChild(recommendElement);
+        divLinksElement.appendChild(removeElement);
+
+        element.appendChild(titleDiv);
+        element.appendChild(creatorDiv);
+        element.appendChild(genreDiv);
+        element.appendChild(typeDiv);
+        element.appendChild(imgElement);
+        element.appendChild(divLinksElement);
 
         document.getElementById('ulMyList').appendChild(element);
     }
-
 
     function updateKPIs() {
         document.getElementById('spnStatusPending').innerHTML = `<img src="../assets/img/status-pending.svg" alt=""> ${statusKPI.pending} itens pendentes`;
@@ -205,5 +236,175 @@
         document.getElementById('spnTypesMusic').innerHTML = `${typesKPI.musics} músicas`;
         document.getElementById('spnTypesBook').innerHTML = `${typesKPI.books} livros`;
         document.getElementById('spnTypesMovie').innerHTML = `${typesKPI.movies} filmes`;
+    }
+
+    async function handleStatusChange(item) {
+        const { value: newStatus } = await Swal.fire({
+            title: 'Mudar status',
+            icon: 'question',
+            text: `Informe o novo status de "${item.titulo}" por ${item.criador}`,
+            input: 'select',
+            inputOptions: {
+                'Pendente': 'Pendente',
+                'Progresso': 'Em progresso',
+                'Finalizado': 'Finalizado'
+            },
+            inputPlaceholder: 'Selecione um status',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#6BF178',
+            inputValidator: (value) => {
+                return new Promise((resolve) => {
+                    if (value != 'Pendente' && value != 'Progresso' && value != 'Finalizado') {
+                        resolve('Você precisa escolher um novo status.');
+                    } else if (value == item.situacao) {
+                        resolve('Status escolhido é igual ao atual.');
+                    } else {
+                        resolve()
+                    }
+                })
+            }
+        })
+
+        if (newStatus) {
+            updateStatus(item.idItem, newStatus, item.situacao);
+        }
+    }
+
+    function updateStatus(idItem, newStatus, oldStatus) {
+        fetch(`/lists/${user.idUsuario}`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idItemServer: idItem,
+                newStatusServer: newStatus,
+                oldStatusServer: oldStatus
+            })
+        }).then(response => {
+            if (response.ok) {
+                var statusSrc = '';
+
+                switch (oldStatus) {
+                    case 'Pendente':
+                        statusKPI.pending--;
+                        break;
+                    case 'Progresso':
+                        statusKPI.progress--
+                        break;
+                    case 'Finalizado':
+                        statusKPI.finished--;
+                        break;
+                }
+
+                switch (newStatus) {
+                    case 'Pendente':
+                        statusKPI.pending++;
+                        statusSrc = 'pending';
+                        break;
+                    case 'Progresso':
+                        statusKPI.progress++
+                        statusSrc = 'progress';
+                        break;
+                    case 'Finalizado':
+                        statusKPI.finished++;
+                        statusSrc = 'finished';
+                        break;
+                }
+
+                document.getElementById(`imgListItemStatus#${idItem}`).setAttribute('src', `../assets/img/status-${statusSrc}.svg`);
+                updateKPIs();
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao atualizar status do item',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+            }
+        }).catch(error => {            
+            console.error(`ERRO: `, error);
+        });
+    }
+
+    function handleDeleteItemFromList(item) {
+        Swal.fire({
+            title: 'Remover da lista',
+            icon: 'warning',
+            text: `Tem certeza que deseja remover "${item.titulo}" por ${item.criador} da sua lista?`,
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Remover',
+            focusConfirm: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteItemFromList(item.idItem, item.situacao, item.tipo);
+            }
+        })
+    }
+
+    function deleteItemFromList(idItem, status, type) {
+        fetch(`/lists/${user.idUsuario}&${idItem}`, {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => {
+            if (response.ok) {
+                var removedItem = document.getElementById(`liListItem#${idItem}`);
+                removedItem.parentNode.removeChild(removedItem);
+
+                switch (type) {
+                    case 'Música':
+                        typesKPI.musics--;
+                        break;
+                    case 'Livro':
+                        typesKPI.books--;
+                        break;
+                    case 'Filme':
+                        typesKPI.movies--;
+                        break;
+                }
+
+                switch (status) {
+                    case 'Pendente':
+                        statusKPI.pending--;
+                        break;
+                    case 'Progresso':
+                        statusKPI.progress--;
+                        break;
+                    case 'Finalizado':
+                        statusKPI.finished--;
+                        break;
+                }
+
+                updateKPIs();
+
+                Swal.fire({
+                    title: 'Suceso',
+                    text: 'Item removido da lista com sucesso',
+                    icon: 'success',
+                    timer: 1500,
+                    timerProgressBar: true,
+                    confirmButtonColor: '#6BF178',
+                });
+
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao remover item da lista',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                }); 
+            }
+        }).catch(error => {            
+            console.error(`ERRO: `, error);
+        });
     }
 </script>
