@@ -419,7 +419,8 @@ span.fav-movie {
 }
 
 #btnSignUp:focus,
-#btnUpdateUser:focus {
+#btnUpdateUser:focus,
+#btnSendFriendshipRequest:focus {
     outline: 3px solid var(--blue-jeans-outline);
 }
 

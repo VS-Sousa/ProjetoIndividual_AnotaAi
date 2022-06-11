@@ -10,7 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Yellowtail&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/validations.js"></script>
 </head>
 <body onload="verifyAuth()">
     <header class="header">
@@ -79,8 +81,8 @@
                                         <li class="movie">Suspense</li>
                                     </ul>
                                     <div>
-                                        <a id="aRecommend" href="">Indicar</a>
-                                        <a id="aRemove" href="">Excluir</a>
+                                        <a class="recommend-link" href="">Indicar</a>
+                                        <a class="remove-link" href="">Excluir</a>
                                     </div>
                                 </li>
                                 <li class="list-item">
@@ -96,8 +98,8 @@
                                         <li class="movie">Suspense</li>
                                     </ul>
                                     <div>
-                                        <a id="aRecommend" href="">Indicar</a>
-                                        <a id="aRemove" href="">Excluir</a>
+                                        <a class="recommend-link" href="">Indicar</a>
+                                        <a class="remove-link" href="">Excluir</a>
                                     </div>
                                 </li>
                                 <li class="list-item">
@@ -113,8 +115,8 @@
                                         <li class="movie">Suspense</li>
                                     </ul>
                                     <div>
-                                        <a id="aRecommend" href="">Indicar</a>
-                                        <a id="aRemove" href="">Excluir</a>
+                                        <a class="recommend-link" href="">Indicar</a>
+                                        <a class="remove-link" href="">Excluir</a>
                                     </div>
                                 </li>
                                 <li class="list-item">
@@ -130,8 +132,8 @@
                                         <li class="movie">Suspense</li>
                                     </ul>
                                     <div>
-                                        <a id="aRecommend" href="">Indicar</a>
-                                        <a id="aRemove" href="">Excluir</a>
+                                        <a class="recommend-link" href="">Indicar</a>
+                                        <a class="remove-link" href="">Excluir</a>
                                     </div>
                                 </li>
                             </ul>
@@ -142,7 +144,7 @@
                                 <p>Procure pelo apelido do usuário que deseja enviar a solicitação de amizade:</p>
                                 <div class="field">
                                     <input id="txtNickname" type="text" placeholder="Ex: ariel.marques404">
-                                    <button id="btnSendFriendshipRequest" class="btn-send">Enviar solicitação</button>
+                                    <button id="btnSendFriendshipRequest" onclick="sendFriendshipRequest()" class="btn-send">Enviar solicitação</button>
                                 </div>
                             </div>
                             <ul class="list friends">
@@ -163,8 +165,8 @@
                                         <li class="movie">Suspense</li>
                                     </ul>
                                     <div>
-                                        <a id="aRecommend" href="">Aceitar</a>
-                                        <a id="aRemove" href="">Recusar</a>
+                                        <a class="recommend-link" href="">Aceitar</a>
+                                        <a class="remove-link" href="">Recusar</a>
                                     </div>
                                 </li>
                                 <li class="list-item">
@@ -177,8 +179,8 @@
                                         <li class="movie">Suspense</li>
                                     </ul>
                                     <div>
-                                        <a id="aRecommend" href="">Aceitar</a>
-                                        <a id="aRemove" href="">Recusar</a>
+                                        <a class="recommend-link" href="">Aceitar</a>
+                                        <a class="remove-link" href="">Recusar</a>
                                     </div>
                                 </li>
                                 <li class="list-item">
@@ -191,8 +193,8 @@
                                         <li class="movie">Suspense</li>
                                     </ul>
                                     <div>
-                                        <a id="aRecommend" href="">Aceitar</a>
-                                        <a id="aRemove" href="">Recusar</a>
+                                        <a class="recommend-link" href="">Aceitar</a>
+                                        <a class="remove-link" href="">Recusar</a>
                                     </div>
                                 </li>
                                 <li class="list-item">
@@ -205,8 +207,8 @@
                                         <li class="movie">Suspense</li>
                                     </ul>
                                     <div>
-                                        <a id="aRecommend" href="">Aceitar</a>
-                                        <a id="aRemove" href="">Recusar</a>
+                                        <a class="recommend-link" href="">Aceitar</a>
+                                        <a class="remove-link" href="">Recusar</a>
                                     </div>
                                 </li>
                                 <li class="list-item">
@@ -219,8 +221,8 @@
                                         <li class="movie">Suspense</li>
                                     </ul>
                                     <div>
-                                        <a id="aRecommend" href="">Aceitar</a>
-                                        <a id="aRemove" href="">Recusar</a>
+                                        <a class="recommend-link" href="">Aceitar</a>
+                                        <a class="remove-link" href="">Recusar</a>
                                     </div>
                                 </li>
                             </ul>
@@ -247,5 +249,82 @@
         
         divFriends.style.display = 'flex';
         btnFriends.classList.add('selected');
+    }
+
+    function sendFriendshipRequest() {
+        var nicknameVar = txtNickname.value;
+
+        var nicknameValidation = validateNickname(nicknameVar);
+
+        if (nicknameValidation != 'OK') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: nicknameValidation,
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            return;
+        }
+
+        fetch(`/friendships/requests`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idUserServer: user.idUsuario,
+                nicknameServer: nicknameVar
+            })
+        }).then(response => {
+            if (response.ok) {
+                Swal.fire({
+                    title: 'Sucesso!',
+                    text: 'Solicitação de amizade enviada com sucesso',
+                    icon: 'success',
+                    timer: 1750,
+                    timerProgressBar: true,
+                    confirmButtonColor: '#6BF178',                    
+                });
+            } else if (response.status == 404 || response.status == 403) {
+                response.text().then(errorMessage => {
+                    if (errorMessage.includes('html')) {
+                        Swal.fire({
+                            title: 'Erro',
+                            text: 'Houve um erro enviar solicitação de amizade!',
+                            icon: 'error',
+                            showConfirmButton: false,
+                            showDenyButton: true,
+                            denyButtonText: 'OK'
+                        });
+                        throw new Error('Houve um erro enviar solicitação de amizade!');
+                    } else {
+                        Swal.fire({
+                            title: 'Erro',
+                            text: errorMessage,
+                            icon: 'error',
+                            showConfirmButton: false,
+                            showDenyButton: true,
+                            denyButtonText: 'OK'
+                        });
+                        throw new Error(errorMessage);  
+                    }
+
+                })
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro enviar solicitação de amizade!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                });
+                throw new Error('Houve um erro enviar solicitação de amizade!');
+            }
+        }).catch(error => {            
+            console.error(`ERRO: `, error);
+        });
     }
 </script>

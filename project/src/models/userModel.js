@@ -66,11 +66,23 @@ function changePassword(idUser, newPassword) {
     return database.executar(query);
 }
 
+function findByNickname(nickname) {
+    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function findByNickname():", nickname);
+
+    var query = `
+        SELECT * FROM Usuario WHERE apelido = '${nickname}';
+    `;
+
+    console.log('Executando a query: \n', query)
+    return database.executar(query);
+}
+
 module.exports = {
     createUser,
     authenticateUser,
     updateUser,
     findById,
     verifyPassword,
-    changePassword
+    changePassword,
+    findByNickname
 }
