@@ -77,6 +77,28 @@ function findByNickname(nickname) {
     return database.executar(query);
 }
 
+function getNotifications(idUser) {
+    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function getNotifications():", idUser);
+
+    var query = `
+        SELECT
+            idUsuario,
+            (SELECT COUNT(DISTINCT fkItem) FROM Indicacao WHERE fkUsuario = idUsuario)
+            as 'qtdIndicacoes',
+            (SELECT COUNT(DISTINCT fkUsuario) FROM Amizade WHERE fkAmigo = idUsuario)
+            as 'qtdPedidosAmizade',
+            (SELECT COUNT(fkItem) FROM Lista WHERE fkUsuario = idUsuario AND situacao = 'Pendente')
+            as 'qtdItensPendentes',
+            (SELECT COUNT(fkItem) FROM Lista WHERE fkUsuario = idUsuario AND situacao = 'Progresso')
+            as 'qtdItensProgresso'
+        FROM Usuario
+        WHERE idUsuario = ${idUser};
+    `;
+
+    console.log('Executando a query: \n', query)
+    return database.executar(query);
+}
+
 module.exports = {
     createUser,
     authenticateUser,
@@ -84,5 +106,6 @@ module.exports = {
     findById,
     verifyPassword,
     changePassword,
-    findByNickname
+    findByNickname,
+    getNotifications
 }

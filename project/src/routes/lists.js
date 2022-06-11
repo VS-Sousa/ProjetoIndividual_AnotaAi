@@ -19,4 +19,8 @@ router.delete('/:idUser&:idItem', function (request, response) {
     listController.removeItemFromList(request, response);
 })
 
+router.get('/latest/:idUser', function (request, response) {
+    listController.getLatestItemsFromList(request, response);
+})
+
 module.exports = router;

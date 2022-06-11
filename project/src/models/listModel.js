@@ -15,44 +15,34 @@ function addToList(idUser, idItem) {
     console.log("ACESSEI O LISTA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function addToList():", idUser, idItem);
 
     var query = `
-        INSERT INTO Lista (fkUsuario, fkItem, situacao, favorito, adicionado) VALUES (${idUser}, ${idItem}, 'Pendente', 'N', now());
+        INSERT INTO Lista (fkUsuario, fkItem, situacao, favorito, atualizado) VALUES (${idUser}, ${idItem}, 'Pendente', 'N', now());
     `;
 
     console.log('Executando a query: \n', query)
     return database.executar(query);
 }
 
-function getItemsFromListByUserId(idUser) {
-    console.log("ACESSEI O LISTA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function getItemsFromListByUserId():", idUser);
+function getItemsFromListByUserId(idUser, recent) {
+    console.log("ACESSEI O LISTA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function getItemsFromListByUserId():", idUser, recent);
 
     var query = `
-        SELECT i.idItem, i.titulo, i.criador, i.genero, i.tipo, l.situacao FROM Lista l INNER JOIN Item i ON l.fkItem = i.idItem WHERE l.fkUsuario = ${idUser};
+        SELECT i.idItem, i.titulo, i.criador, i.genero, i.tipo, l.situacao, l.atualizado FROM Lista l INNER JOIN Item i ON l.fkItem = i.idItem WHERE l.fkUsuario = ${idUser} ORDER BY l.atualizado DESC
     `;
+
+    if (recent) {
+        query += ` LIMIT ${recent}`;
+    }
 
     console.log('Executando a query: \n', query)
     return database.executar(query);
 }
 
-function updateStatus(idUser, idItem, newStatus, oldStatus) {
-    console.log("ACESSEI O LISTA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function addToList():", idUser, idItem,  newStatus, oldStatus);
+function updateStatus(idUser, idItem, newStatus) {
+    console.log("ACESSEI O LISTA MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function addToList():", idUser, idItem,  newStatus);
 
-    var query = `UPDATE Lista SET situacao = '${newStatus}', `;
-
-    if (oldStatus == 'Pendente' && newStatus == 'Progresso') {
-        query += ` iniciado = now() `;
-    } else if (oldStatus == 'Pendente' && newStatus == 'Finalizado') {
-        query += ` iniciado = now(), finalizado = now() `;
-    } else if (oldStatus == 'Progresso' && newStatus == 'Finalizado') {
-        query += ` finalizado = now() `;
-    } else if (oldStatus == 'Progresso' && newStatus == 'Pendente') {
-        query += ` iniciado = null, adicionado = now() `;
-    } else if (oldStatus == 'Finalizado' && newStatus == 'Progresso') {
-        query += ` finalizado = null, iniciado = now() `;
-    } else if (oldStatus == 'Finalizado' && newStatus == 'Pendente') {
-        query += ` finalizado = null, iniciado = null, adicionado = now() `;
-    }
-
-    query += ` WHERE fkUsuario = ${idUser} AND fkItem = ${idItem}`;
+    var query = `
+        UPDATE Lista SET situacao = '${newStatus}', atualizado = now() WHERE fkUsuario = ${idUser} AND fkItem = ${idItem};
+    `;
 
     console.log('Executando a query: \n', query)
     return database.executar(query);

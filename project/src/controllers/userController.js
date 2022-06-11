@@ -142,9 +142,27 @@ function changePassword(request, response) {
     }
 }
 
+
+function getNotifications(request, response) {
+    var idUser = request.params.idUser;
+
+    if (idUser == undefined) {
+        response.status(403).send('Id do Usuário está indefinido')
+    } else {
+        userModel.getNotifications(idUser).then(result => {
+            response.json(result[0]);
+        }).catch(error => {
+            console.log(error);
+            console.log("\nHouve um erro ao verificar senha antiga! Erro: ", error.sqlMessage);
+            response.status(500).json(error.sqlMessage);
+        });
+    }
+}
+
 module.exports = {
     signUp,
     signIn,
     updateUser,
-    changePassword
+    changePassword,
+    getNotifications
 }

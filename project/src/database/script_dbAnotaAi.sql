@@ -38,9 +38,7 @@ CREATE TABLE Lista (
     CONSTRAINT CK_Lista_situacao CHECK(situacao IN('Pendente', 'Progresso', 'Finalizado')),
     favorito CHAR(1),
     CONSTRAINT CK_Lista_favorito CHECK(favorito IN('S', 'N')),
-    adicionado DATE NOT NULL,
-    iniciado DATE,
-    finalizado DATE
+    atualizado DATETIME NOT NULL
 );
 
 -- Criando tabela Amizade
@@ -106,15 +104,3 @@ INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('O Retrato de Dorian Gr
 INSERT INTO Item (titulo, criador, genero, tipo) VALUES ('A.I. - Inteligência Artificial', 'Steven Spielberg', 'Ficção científica', 'Filme');
 
 SELECT * FROM Item;
-
-SELECT
-	ag.idUsuario as 'idAmigo',
-    ag.apelido,
-    it.titulo,
-    it.criador,
-    it.genero,
-    it.tipo
-FROM Indicacao ind
-INNER JOIN Usuario ag ON ag.idUsuario = ind.fkUsuario
-INNER JOIN Item it ON it.idItem = ind.fkItem
-WHERE ind.fkAmigo = 2

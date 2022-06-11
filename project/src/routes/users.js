@@ -19,4 +19,8 @@ router.patch('/password/:idUser', function (request, response) {
     userController.changePassword(request, response);
 });
 
+router.get('/notifications/:idUser', function (request, response) {
+    userController.getNotifications(request, response);
+})
+
 module.exports = router;

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     <script src="../assets/js/auth.js"></script>
 </head>
-<body onload="verifyAuth()">
+<body onload="verifyAuth(); dashboardSetUp()">
     <header class="header">
         <nav class="navbar container">
             <a class="logo" href="./index.html">
@@ -53,7 +53,7 @@
                 <nav class="card">
                     <a href="./my-account.html" class="welcome">
                         <img src="../assets/img/circle-user-solid.svg" alt="Usuario" class="user-img">
-                        Olá, Usuário!
+                        <span id="spnGreetings">Olá, Usuário!</span>
                     </a>
                     <nav class="reminders">
                         <a href="./recommendations.html" class="reminder">
@@ -76,43 +76,7 @@
                             <div id="divMyListH1" class="heading-underline">
                                 <h1>Minha lista ></h1>
                             </div>
-                            <ul class="list">
-                                <li class="list-item">
-                                    <div>CORSO</div>
-                                    <div>Tyler, The Creator</div>
-                                    <div>Rap</div>
-                                    <div class="music">Música</div>
-                                    <img src="../assets/img/status-pending.svg" alt="">
-                                </li>
-                                <li class="list-item">
-                                    <div>What Did Jack Do?</div>
-                                    <div>David Lynch</div>
-                                    <div>Suspense</div>
-                                    <div class="movie">Filme</div>
-                                    <img src="../assets/img/status-finished.svg" alt="">
-                                </li>
-                                <li class="list-item">
-                                    <div>Crime e Castigo</div>
-                                    <div>Fyodor Dostoevsky</div>
-                                    <div>Romance filosófico</div>
-                                    <div class="book">Livro</div>
-                                    <img src="../assets/img/status-progress.svg" alt="">
-                                </li>
-                                <li class="list-item">
-                                    <div>Cais</div>
-                                    <div>Milton Nascimento</div>
-                                    <div>MPB</div>
-                                    <div class="music">Música</div>
-                                    <img src="../assets/img/status-finished.svg" alt="">
-                                </li>
-                                <li class="list-item">
-                                    <div>Como fazer amigos e influenciar pessoas</div>
-                                    <div>Dale Carnegie</div>
-                                    <div>Auto-ajuda</div>
-                                    <div class="book">Livro</div>
-                                    <img src="../assets/img/status-progress.svg" alt="">
-                                </li>
-                            </ul>
+                            <ul id="ulLatestListItems" class="list"></ul>
                         </div>
                     </a>
                 </div>
@@ -121,4 +85,141 @@
     </main>
 </body>
 </html>
+<script>
+    setInterval(() => {
+        getNotifications();
+    }, 1000);
+
+    function dashboardSetUp() {
+        setGreetingMessage();
+        getLatestItensFromList();
+        getNotifications()
+    }
+
+    function setGreetingMessage() {
+        document.getElementById('spnGreetings').innerText = `Olá, ${user.apelido}!`;
+    }
+
+    function getLatestItensFromList() {
+        fetch(`/lists/latest/${user.idUsuario}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(json => {
+                    json.forEach(item => {
+                        var typeClass = '';
+                        var statusSrc = '';
+
+                        switch (item.tipo) {
+                            case 'Música':
+                                typeClass = 'music';
+                                break;
+                            case 'Livro':
+                                typeClass = 'book';
+                                break;
+                            case 'Filme':
+                                typeClass = 'movie';
+                                break;
+                        }
+
+                        switch (item.situacao) {
+                            case 'Pendente':
+                                statusSrc = 'pending';
+                                break;
+                            case 'Progresso':
+                                statusSrc = 'progress';
+                                break;
+                            case 'Finalizado':
+                                statusSrc = 'finished';
+                                break;
+                        }
+
+                        renderItem(item, typeClass, statusSrc);
+                    });
+                });
+
+            } else {
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Houve um erro ao carregar os items!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    showDenyButton: true,
+                    denyButtonText: 'OK'
+                }); 
+                throw new Error('Houve um erro ao carregar os items!');
+            }
+        }).catch(error => {
+            Swal.fire({
+                title: 'Erro',
+                text: 'Houve um erro ao carregar os items!',
+                icon: 'error',
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: 'OK'
+            });
+            console.error(`ERRO: `, error);
+        })
+    }
+
+    function renderItem(item, typeClass, statusSrc) {
+        var element = document.createElement('li');
+        element.classList.add('list-item');
+        element.id = `liListItem#${item.idItem}`;
+
+        var titleDiv = document.createElement('div');
+        titleDiv.innerText = item.titulo;
+
+        var creatorDiv = document.createElement('div');
+        creatorDiv.innerText = item.criador;
+
+        var genreDiv = document.createElement('div');
+        genreDiv.innerText = item.genero;
+
+        var typeDiv = document.createElement('div');
+        typeDiv.classList.add(typeClass)
+        typeDiv.innerText = item.tipo;
+        
+        var imgElement = document.createElement('img');
+        imgElement.id = `imgListItemStatus#${item.idItem}`;
+        imgElement.src = `../assets/img/status-${statusSrc}.svg`;
+        imgElement.addEventListener('click', function (event) {
+            handleStatusChange(item);
+        })
+
+        element.appendChild(titleDiv);
+        element.appendChild(creatorDiv);
+        element.appendChild(genreDiv);
+        element.appendChild(typeDiv);
+        element.appendChild(imgElement);
+
+        document.getElementById('ulLatestListItems').appendChild(element);
+    }
+
+    function getNotifications() {
+        fetch(`/users/notifications/${user.idUsuario}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            } 
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(json => {
+                    document.getElementById('spanRecommendations').innerText = json.qtdIndicacoes
+                    document.getElementById('spanRequests').innerText = json.qtdPedidosAmizade
+                    document.getElementById('spanPending').innerText = json.qtdItensPendentes
+                    document.getElementById('spanProgress').innerText = json.qtdItensProgresso
+                })
+            } else {
+                throw new Error('Erro ao carregar notificações');
+            }
+        }).catch(error => {
+            console.error(`ERRO: `, error);
+
+        })
+    }
+</script>
   

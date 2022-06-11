@@ -57,19 +57,16 @@ function getAllItemsFromUserList(request, response) {
 function updateStatus(request, response) {
     var idUser = request.params.idUser;
     var idItem = request.body.idItemServer;
-    var oldStatus = request.body.oldStatusServer;
     var newStatus = request.body.newStatusServer;
 
     if (idUser == undefined) {
         response.status(400).send('Id do Usuário está indefinido');
     } else if (idItem == undefined) {
         response.status(400).send('Id do Item está indefinido');
-    } else if (oldStatus == undefined) {
-        response.status(400).send('Antiga situacao está indefinida');
     } else if (newStatus == undefined) {
         response.status(400).send('Nova situacao está indefinida');
     } else {
-        listModel.updateStatus(idUser, idItem, newStatus, oldStatus).then(result => {
+        listModel.updateStatus(idUser, idItem, newStatus).then(result => {
             var hasUpdated = result.affectedRows;
 
             if (hasUpdated != 1) {
@@ -110,9 +107,26 @@ function removeItemFromList(request, response) {
     }
 }
 
+function getLatestItemsFromList(request, response) {
+    var idUser = request.params.idUser;
+
+    if (idUser == undefined) {
+        response.status(400).send('Id do Usuário está indefinido');
+    } else {
+        listModel.getItemsFromListByUserId(idUser, 5).then(result => {
+            response.json(result);
+        }).catch(error => {
+            console.log(error);
+            console.log("\nHouve um errro ao recuperar itens recentes! Erro: ", error.sqlMessage);
+            response.status(500).json(error.sqlMessage);
+        });
+    }
+}
+
 module.exports = {
     addToList,
     getAllItemsFromUserList,
     updateStatus,
-    removeItemFromList
+    removeItemFromList,
+    getLatestItemsFromList
 }

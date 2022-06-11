@@ -258,8 +258,6 @@
                 return new Promise((resolve) => {
                     if (value != 'Pendente' && value != 'Progresso' && value != 'Finalizado') {
                         resolve('Você precisa escolher um novo status.');
-                    } else if (value == item.situacao) {
-                        resolve('Status escolhido é igual ao atual.');
                     } else {
                         resolve()
                     }
@@ -281,7 +279,6 @@
             body: JSON.stringify({
                 idItemServer: idItem,
                 newStatusServer: newStatus,
-                oldStatusServer: oldStatus
             })
         }).then(response => {
             if (response.ok) {
