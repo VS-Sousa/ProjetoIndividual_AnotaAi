@@ -68,6 +68,8 @@
 </body>
 </html>
 <script>
+    var receivedRecommendations = [];
+
     function getAllReceivedRecommendations() {
         fetch(`/recommendations/${user.idUsuario}`, {
             method: 'GET',
@@ -77,9 +79,26 @@
         }).then(response => {
             if (response.ok) {
                 response.json().then(json => {
-                    json.forEach(recommendation => {
-                        renderRecommendation(recommendation)
+                    var newRecommendations = json.filter(item => {
+                        var alreadyRendered = receivedRecommendations.find(r => {
+                            if (r.idAmigo == item.idAmigo && r.idItem == item.idItem) {
+                                return r;
+                            }
+                        })
+
+                        if (!alreadyRendered) {
+                            return item;
+                        }
                     });
+
+                    if (newRecommendations.length > 0) {
+                        newRecommendations.forEach(recommendation => {
+                            renderRecommendation(recommendation)
+                        });
+                    }
+
+                    receivedRecommendations = json;
+                    removeDeletedRecommendations();
                 })
             } else {
                 Swal.fire({
@@ -168,11 +187,35 @@
 
         var element = document.createElement('div');
         element.classList.add('recommendation');
+        element.classList.add('divRenderedRecommendation');
         element.id = `divRecommendation#${recommendation.idAmigo}#${recommendation.idItem}`
         element.appendChild(userDiv);
         element.appendChild(itemCard);
 
         document.getElementById('divRecommendations').appendChild(element);
+    }
+
+    function removeDeletedRecommendations() {
+        var renderedRecommendations = document.getElementsByClassName('divRenderedRecommendation');
+
+        if (renderedRecommendations.length > 0) {
+            for (let i = 0; i < renderedRecommendations.length; i++) {
+                var element = renderedRecommendations[i];
+                var subid = element.id.slice(18);
+                var ids = subid.split('#');
+                var idFriend = Number(ids[0]);
+                var idItem = Number(ids[1]);
+                var stillRecommended = receivedRecommendations.find(r => {
+                    if (r.idAmigo == idFriend && r.idItem == idItem) {
+                        return r;
+                    }
+                });
+
+                if (!stillRecommended) {
+                    element.parentNode.removeChild(element);
+                }
+            }
+        }
     }
 
     function handleRecommendationDecision(recommendation) {

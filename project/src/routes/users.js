@@ -23,4 +23,8 @@ router.get('/notifications/:idUser', function (request, response) {
     userController.getNotifications(request, response);
 })
 
+router.get('/preferences/:idUser', function (request, response) {
+    userController.getUserPreferences(request, response);
+})
+
 module.exports = router;

@@ -99,6 +99,32 @@ function getNotifications(idUser) {
     return database.executar(query);
 }
 
+function getUserPreferences(idUser) {
+    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function getUserPreferences():", idUser);
+
+    var query = `
+        SELECT
+            idUsuario,
+            (SELECT COUNT(l.fkItem) FROM Lista l INNER JOIN Item i ON i.iditem = l.fkItem WHERE l.fkUsuario = idUsuario AND i.tipo = 'Música')
+            as 'qtdMusicas',
+            (SELECT COUNT(l.fkItem) FROM Lista l INNER JOIN Item i ON i.iditem = l.fkItem WHERE l.fkUsuario = idUsuario AND i.tipo = 'Livro')
+            as 'qtdLivros',
+            (SELECT COUNT(l.fkItem) FROM Lista l INNER JOIN Item i ON i.iditem = l.fkItem WHERE l.fkUsuario = idUsuario AND i.tipo = 'Filme')
+            as 'qtdFilmes',
+            (SELECT i.genero FROM Lista l INNER JOIN Item i ON i.iditem = l.fkItem WHERE l.fkUsuario = idUsuario AND i.tipo = 'Música' GROUP BY i.genero ORDER BY COUNT(i.idItem) DESC LIMIT 1)
+            as 'generoMusica',
+            (SELECT i.genero FROM Lista l INNER JOIN Item i ON i.iditem = l.fkItem WHERE l.fkUsuario = idUsuario AND i.tipo = 'Livro' GROUP BY i.genero ORDER BY COUNT(i.idItem) DESC LIMIT 1)
+            as 'generoLivro',
+            (SELECT i.genero FROM Lista l INNER JOIN Item i ON i.iditem = l.fkItem WHERE l.fkUsuario = idUsuario AND i.tipo = 'Filme' GROUP BY i.genero ORDER BY COUNT(i.idItem) DESC LIMIT 1)
+            as 'generoFilme'
+        FROM Usuario
+        WHERE idUsuario = ${idUser};
+    `;
+
+    console.log('Executando a query: \n', query)
+    return database.executar(query);
+}
+
 module.exports = {
     createUser,
     authenticateUser,
@@ -107,5 +133,6 @@ module.exports = {
     verifyPassword,
     changePassword,
     findByNickname,
-    getNotifications
+    getNotifications,
+    getUserPreferences
 }

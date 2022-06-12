@@ -14,7 +14,7 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body onload="verifyAuth()">
+<body onload="verifyAuth(); setUpMyAccount()">
     <header class="header">
         <nav class="navbar container">
             <a class="logo" href="./index.html">
@@ -61,8 +61,8 @@
                             <div>
                                 <img src="../assets/img/circle-user-solid.svg">
                                 <ul>
-                                    <li>Apelido</li>
-                                    <li>Nome</li>
+                                    <li id="liMyNickname">Apelido</li>
+                                    <li id="liMyName">Nome</li>
                                 </ul>
                             </div>
                             <a class="btn-link-auth" href="./edit-account.html">Editar conta</a>
@@ -80,39 +80,7 @@
                             </div>
                             <canvas id="chartHistory"></canvas>
                         </div>
-                        <div class="favorites">
-                            <div class="heading-underline">
-                                <h1>Favoritos</h1>
-                            </div>
-                            <div class="explorer">
-                                <div class="item-card music">
-                                    <h3>Música</h3>
-                                    <div class="photo">
-                                        <img src="../assets/img/music.png" alt="Filme">
-                                    </div>
-                                    <h2>Seigfried</h2>
-                                    <p>Frank Ocean</p>
-                                    <p>Rap</p>
-                                </div>
-                                <div class="item-card book">
-                                    <h3>Livro</h3>
-                                    <div class="photo">
-                                        <img src="../assets/img/livro.png" alt="Livro">
-                                    </div>
-                                    <h2>Orgulho e Preconceito</h2>
-                                    <p>Jane Austen</p>
-                                    <p>Romance de época</p>
-                                </div>
-                                <div class="item-card movie">
-                                    <h3>Filme</h3>
-                                    <div class="photo">
-                                        <img src="../assets/img/clapperboard.png" alt="Filme">
-                                    </div>
-                                    <h2>Taxi Driver</h2>
-                                    <p>Martin Scorcese</p>
-                                    <p>Drama</p>
-                                </div>
-                            </div>
+                        <div class="favorites">                            
                             <div class="heading-underline">
                                 <h1>Preferências</h1>
                             </div>
@@ -122,9 +90,9 @@
                                 </div>
                                 <ul>
                                     <li>Gêneros favoritos</li>
-                                    <li class="music">Rock</li>
-                                    <li class="book">Romance de época</li>
-                                    <li class="movie">Drama</li>
+                                    <li id="liFavoriteMusicGenre" class="music">Rock</li>
+                                    <li id="liFavoriteBookGenre" class="book">Romance de época</li>
+                                    <li id="liFavoriteMovieGenre" class="movie">Drama</li>
                                 </ul>
                             </div>
                         </div>
@@ -135,6 +103,17 @@
     </main>
 </body>
 </html>
+<script>
+    function setUpMyAccount() {
+        showMyAccountInfo();
+        getPreferences()
+    }
+
+    function showMyAccountInfo() {
+        document.getElementById('liMyNickname').innerText = user.apelido;
+        document.getElementById('liMyName').innerText = user.nome;
+    }
+</script>
 <script>
     const historyChartLabels = ['Março','Abril','Maio','Junho','Julho','Agosto'];
     const historyChartData = {
@@ -168,7 +147,7 @@
             responsive: true,
             plugins: {
                 legend: {
-                    position: 'top',
+                    position: 'bottom',
                 }
             }
         }
@@ -178,46 +157,78 @@
         document.getElementById('chartHistory'),
         historyChartConfig
     )
-
-    const typesChartData = {
-        labels: ['Tipos'],
-        datasets: [
-            {
-                label: 'Música',
-                data: [10],
-                borderColor: '#FF5964',
-                backgroundColor: '#FF5964'
-            },
-            {
-                label: 'Livro',
-                data: [15],
-                borderColor: '#6BF178',
-                backgroundColor: '#6BF178'
-            },
-            {
-                label: 'Filme',
-                data: [20],
-                borderColor: '#35A7FF',
-                backgroundColor: '#35A7FF'
+</script>
+<script>
+    function getPreferences() {
+        fetch(`/users/preferences/${user.idUsuario}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
             }
-        ]
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(json => {
+                    renderTypesChart(json.qtdMusicas, json.qtdLivros, json.qtdFilmes);
+                    renderFavoriteGenres(json.generoMusica, json.generoLivro, json.generoFilme);
+                })
+            } else {
+                throw new Error('Erro ao carregar notificações');
+            }
+        }).catch(error => {
+            console.error(`ERRO: `, error);
+        })
     }
 
-    const typesChartConfig = {
-        type: 'bar',
-        data: typesChartData,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
+    function renderTypesChart(musics, books, movies) {
+        const typesChartData = {
+            labels: ['Tipos'],
+            datasets: [
+                {
+                    label: 'Música',
+                    data: [musics],
+                    borderColor: '#FF5964',
+                    backgroundColor: '#FF5964'
+                },
+                {
+                    label: 'Livro',
+                    data: [books],
+                    borderColor: '#6BF178',
+                    backgroundColor: '#6BF178'
+                },
+                {
+                    label: 'Filme',
+                    data: [movies],
+                    borderColor: '#35A7FF',
+                    backgroundColor: '#35A7FF'
+                }
+            ]
+        }
+
+        const typesChartConfig = {
+            type: 'bar',
+            data: typesChartData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                },
+                animation: {
+                    duration: 0
                 }
             }
         }
+
+        const typesChart = new Chart(
+            document.getElementById('chartTypes'),
+            typesChartConfig
+        )
     }
 
-    const typesChart = new Chart(
-        document.getElementById('chartTypes'),
-        typesChartConfig
-    )
+    function renderFavoriteGenres(music, book, movie) {
+        document.getElementById('liFavoriteMusicGenre').innerText = music == null ? 'Não definido' : music
+        document.getElementById('liFavoriteBookGenre').innerText = book == null ? 'Não definido' : book
+        document.getElementById('liFavoriteMovieGenre').innerText = movie == null ? 'Não definido' : movie
+    }
 </script>

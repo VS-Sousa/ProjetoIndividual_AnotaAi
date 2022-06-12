@@ -153,7 +153,23 @@ function getNotifications(request, response) {
             response.json(result[0]);
         }).catch(error => {
             console.log(error);
-            console.log("\nHouve um erro ao verificar senha antiga! Erro: ", error.sqlMessage);
+            console.log("\nHouve um erro ao obter notificações! Erro: ", error.sqlMessage);
+            response.status(500).json(error.sqlMessage);
+        });
+    }
+}
+
+function getUserPreferences(request, response) {
+    var idUser = request.params.idUser;
+
+    if (idUser == undefined) {
+        response.status(403).send('Id do Usuário está indefinido')
+    } else {
+        userModel.getUserPreferences(idUser).then(result => {
+            response.json(result[0]);
+        }).catch(error => {
+            console.log(error);
+            console.log("\nHouve um erro ao obter suas preferências! Erro: ", error.sqlMessage);
             response.status(500).json(error.sqlMessage);
         });
     }
@@ -164,5 +180,6 @@ module.exports = {
     signIn,
     updateUser,
     changePassword,
-    getNotifications
+    getNotifications,
+    getUserPreferences
 }
