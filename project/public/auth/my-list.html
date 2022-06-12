@@ -201,7 +201,7 @@
         imgElement.id = `imgListItemStatus#${item.idItem}`;
         imgElement.src = `../assets/img/status-${statusSrc}.svg`;
         imgElement.addEventListener('click', function (event) {
-            handleStatusChange(item);
+            handleStatusChange(item.idItem);
         })
 
         var recommendElement = document.createElement('a');
@@ -239,7 +239,13 @@
         document.getElementById('spnTypesMovie').innerHTML = `${typesKPI.movies} filmes`;
     }
 
-    async function handleStatusChange(item) {
+    async function handleStatusChange(idItem) {
+        var item = myList.find(i => {
+            if (i.idItem == idItem) {
+                return i;
+            }
+        });
+
         const { value: newStatus } = await Swal.fire({
             title: 'Mudar status',
             icon: 'question',
@@ -282,6 +288,14 @@
             })
         }).then(response => {
             if (response.ok) {
+                var indexItem = myList.findIndex(i => {
+                    if (i.idItem == idItem) {
+                        return i;
+                    }
+                })
+
+                myList[indexItem].situacao = newStatus;
+
                 var statusSrc = '';
 
                 switch (oldStatus) {

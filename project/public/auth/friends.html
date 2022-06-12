@@ -81,6 +81,10 @@
 </body>
 </html>
 <script>
+    setInterval(() => {
+        loadFriends();
+    }, 1000)
+
     function requests() {
         btnFriends.classList.remove('selected');
         divFriends.style.display = 'none';
@@ -103,6 +107,8 @@
     }
 </script>
 <script>
+    var friendships = [];
+
     function getAllFriends() {
         fetch(`/friendships/friends/${user.idUsuario}`, {
             method: 'GET',
@@ -112,36 +118,57 @@
         }).then(response => {
             if (response.ok) {
                 response.json().then(json => {
-                    var header = document.createElement('li');
-                    header.classList.add('list-item');
+                    if (!document.getElementById('ulFriends').hasChildNodes()) {
+                        var header = document.createElement('li');
+                        header.classList.add('list-item');
+    
+                        header.innerHTML = `
+                            <div>Amigo</div>
+                            <div>Apelido</div>
+                            <div>Item</div>
+                            <div>Preferência</div>
+                            <div>Operações</div>
+                        `;
+    
+                        document.getElementById('ulFriends').appendChild(header);
+                    }
 
-                    header.innerHTML = `
-                        <div>Amigo</div>
-                        <div>Apelido</div>
-                        <div>Item</div>
-                        <div>Preferência</div>
-                        <div>Operações</div>
-                    `;
 
-                    document.getElementById('ulFriends').appendChild(header);
+                    var newFriendships = json.filter(item => {
+                        var alreadyRendered = friendships.find(f => {
+                            if (f.idAmigo == item.idAmigo) {
+                                return f;
+                            }
+                        })
 
-                    json.forEach(friendship => {
-                        var typeClass = '';
-
-                        switch (friendship.tipoPreferido) {
-                            case 'Música':
-                                typeClass = 'music';
-                                break;
-                            case 'Livro':
-                                typeClass = 'book';
-                                break;
-                            case 'Filme':
-                                typeClass = 'movie';
-                                break;
+                        if (!alreadyRendered) {
+                            return item;
                         }
-
-                        renderFriendship(friendship, typeClass);
                     });
+
+                    if (newFriendships.length > 0) {
+                        newFriendships.forEach(friendship => {
+                            var typeClass = '';
+
+                            switch (friendship.tipoPreferido) {
+                                case 'Música':
+                                    typeClass = 'music';
+                                    break;
+                                case 'Livro':
+                                    typeClass = 'book';
+                                    break;
+                                case 'Filme':
+                                    typeClass = 'movie';
+                                    break;
+                            }
+
+                            renderFriendship(friendship, typeClass);
+                        });
+                    }
+
+                    friendships = json;
+
+                    removeEndedFriendships();
                 });
             } else {
                 Swal.fire({
@@ -162,6 +189,7 @@
     function renderFriendship(friendship, typeClass) {
         var element = document.createElement('li');
         element.classList.add('list-item');
+        element.classList.add('liRenderedFriendship');
         element.id = `liFriendship#${friendship.idAmigo}`;
 
         var imgElement = document.createElement('img');
@@ -225,6 +253,26 @@
         document.getElementById('ulFriends').appendChild(element);
     }
 
+    function removeEndedFriendships() {
+        var renderedFriendship = document.getElementsByClassName('liRenderedFriendship');
+
+        if (renderedFriendship.length > 0) {
+            for (let i = 0; i < renderedFriendship.length; i++) {
+                var element = renderedFriendship[i];
+                var id = Number(element.id.slice(13));
+                var stillFriends = friendships.find(f => {
+                    if (f.idAmigo == id) {
+                        return f;
+                    }
+                });
+
+                if (!stillFriends) {
+                    element.parentNode.removeChild(element);
+                }
+            }
+        }
+    }
+
     function handleEndFriendship(friendship) {
         Swal.fire({
             title: 'Excluir amizade',
@@ -286,6 +334,8 @@
     }
 </script>
 <script>
+    var receivedRequests = [];
+
     function sendFriendshipRequest() {
         var nicknameVar = txtNickname.value;
 
@@ -372,36 +422,58 @@
         }).then(response => {
             if (response.ok) {
                 response.json().then(json => {
-                    var header = document.createElement('li');
-                    header.classList.add('list-item');
+                    if (!document.getElementById('ulReceivedRequests').hasChildNodes()) {
+                        var header = document.createElement('li');
+                        header.classList.add('list-item');
+    
+                        header.innerHTML = `
+                            <div>Amigo</div>
+                            <div>Apelido</div>
+                            <div>Item</div>
+                            <div>Preferência</div>
+                            <div>Operações</div>
+                        `;
+    
+                        document.getElementById('ulReceivedRequests').appendChild(header);
+                    }
 
-                    header.innerHTML = `
-                        <div>Amigo</div>
-                        <div>Apelido</div>
-                        <div>Item</div>
-                        <div>Preferência</div>
-                        <div>Operações</div>
-                    `;
+                    var newRequests = json.filter(item => {
+                        var alreadyRendered = receivedRequests.find(r => {
+                            if (r.idUsuario == item.idUsuario) {
+                                return r;
+                            }
+                        })
 
-                    document.getElementById('ulReceivedRequests').appendChild(header);
-
-                    json.forEach(receivedRequest => {
-                        var typeClass = '';
-
-                        switch (receivedRequest.tipoPreferido) {
-                            case 'Música':
-                                typeClass = 'music';
-                                break;
-                            case 'Livro':
-                                typeClass = 'book';
-                                break;
-                            case 'Filme':
-                                typeClass = 'movie';
-                                break;
+                        if (!alreadyRendered) {
+                            return item;
                         }
-
-                        renderReceivedRequest(receivedRequest, typeClass);
                     });
+
+                    console.log(newRequests);
+
+                    if (newRequests.length > 0) {
+                        json.forEach(receivedRequest => {
+                            var typeClass = '';
+
+                            switch (receivedRequest.tipoPreferido) {
+                                case 'Música':
+                                    typeClass = 'music';
+                                    break;
+                                case 'Livro':
+                                    typeClass = 'book';
+                                    break;
+                                case 'Filme':
+                                    typeClass = 'movie';
+                                    break;
+                            }
+
+                            renderReceivedRequest(receivedRequest, typeClass);
+                        });
+                    }
+                    
+                    receivedRequests = json;
+
+                    removeDeletedRequests();
                 });
             } else {
                 Swal.fire({
@@ -422,6 +494,7 @@
     function renderReceivedRequest(receivedRequest, typeClass) {
         var element = document.createElement('li');
         element.classList.add('list-item');
+        element.classList.add('liRenderedReceivedRequest');
         element.id = `liReceivedRequest#${receivedRequest.idUsuario}`;
 
         var imgElement = document.createElement('img');
@@ -478,6 +551,26 @@
         element.appendChild(decisionDiv);
 
         document.getElementById('ulReceivedRequests').appendChild(element);
+    }
+
+    function removeDeletedRequests() {
+        var renderedRequests = document.getElementsByClassName('liRenderedReceivedRequest');
+
+        if (renderedRequests.length > 0) {
+            for (let i = 0; i < renderedRequests.length; i++) {
+                var element = renderedRequests[i];
+                var id = Number(element.id.slice(18));
+                var stillRequested = receivedRequests.find(r => {
+                    if (r.idUsuario == id) {
+                        return r;
+                    }
+                });
+
+                if (!stillRequested) {
+                    element.parentNode.removeChild(element);
+                }
+            }
+        }
     }
 
     function handleRefuseFriendshipRequest(receivedRequest) {
