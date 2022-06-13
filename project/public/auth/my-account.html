@@ -74,12 +74,6 @@
                         <div id="divMyAccountStatsH1" class="heading-underline">
                             <h1>Estatísticas</h1>
                         </div>
-                        <div class="chart-container">
-                            <div class="heading-underline">
-                                <h1>Histórico</h1>
-                            </div>
-                            <canvas id="chartHistory"></canvas>
-                        </div>
                         <div class="favorites">                            
                             <div class="heading-underline">
                                 <h1>Preferências</h1>
@@ -115,50 +109,6 @@
     }
 </script>
 <script>
-    const historyChartLabels = ['Março','Abril','Maio','Junho','Julho','Agosto'];
-    const historyChartData = {
-        labels: historyChartLabels,
-        datasets: [
-            {
-                label: 'Pendente',
-                data: [10,15,20,21,17,8],
-                borderColor: '#FF5964',
-                backgroundColor: '#FF5964'
-            },
-            {
-                label: 'Progresso',
-                data: [8,6,7,2,1,9],
-                borderColor: '#FFE74C',
-                backgroundColor: '#FFE74C'
-            },
-            {
-                label: 'Concluido',
-                data: [3,5,4,8,2,1],
-                borderColor: '#6BF178',
-                backgroundColor: '#6BF178'
-            }
-        ]
-    }
-
-    const historyChartConfig = {
-        type: 'line',
-        data: historyChartData,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                }
-            }
-        }
-    }
-
-    const historyChart = new Chart(
-        document.getElementById('chartHistory'),
-        historyChartConfig
-    )
-</script>
-<script>
     function getPreferences() {
         fetch(`/users/preferences/${user.idUsuario}`, {
             method: 'GET',
@@ -181,7 +131,7 @@
 
     function renderTypesChart(musics, books, movies) {
         const typesChartData = {
-            labels: ['Tipos'],
+            labels: ['Tipo de Itens'],
             datasets: [
                 {
                     label: 'Música',
