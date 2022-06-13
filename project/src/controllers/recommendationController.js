@@ -133,7 +133,7 @@ function addRecommendationToList(request, response) {
     } else if (idSender == undefined) {
         response.status(403).send('Id do Amigo está indefinido!');
     } else {
-        listModel.verifyIfAlreadyInList(idUser, idItem).then(alreadyExists => {
+        listModel.verifyIfAlreadyInList(idReceiver, idItem).then(alreadyExists => {
             if (alreadyExists.length > 0) {
                 response.status(403).send('Item já está na lista!');
                 return;

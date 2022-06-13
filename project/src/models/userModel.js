@@ -83,9 +83,9 @@ function getNotifications(idUser) {
     var query = `
         SELECT
             idUsuario,
-            (SELECT COUNT(DISTINCT fkItem) FROM Indicacao WHERE fkUsuario = idUsuario)
+            (SELECT COUNT(DISTINCT fkItem) FROM Indicacao WHERE fkAmigo = idUsuario)
             as 'qtdIndicacoes',
-            (SELECT COUNT(DISTINCT fkUsuario) FROM Amizade WHERE fkAmigo = idUsuario)
+            (SELECT COUNT(DISTINCT fkUsuario) FROM Amizade WHERE fkAmigo = idUsuario AND situacao = 'Pendente')
             as 'qtdPedidosAmizade',
             (SELECT COUNT(fkItem) FROM Lista WHERE fkUsuario = idUsuario AND situacao = 'Pendente')
             as 'qtdItensPendentes',
