@@ -133,30 +133,41 @@ function addRecommendationToList(request, response) {
     } else if (idSender == undefined) {
         response.status(403).send('Id do Amigo está indefinido!');
     } else {
-        listModel.addToList(idReceiver, idItem).then(add => {
-            var hasAdded = add.affectedRows;
-
-            if (hasAdded != 1) {
-                throw new Error('Houve um erro ao adicionar item à lista!');
+        listModel.verifyIfAlreadyInList(idUser, idItem).then(alreadyExists => {
+            if (alreadyExists.length > 0) {
+                response.status(403).send('Item já está na lista!');
+                return;
             }
 
-            recommendationModel.deleteRecommendation(idSender, idItem, idReceiver).then(result => {
-                var hasRemoved = result.affectedRows;
+            listModel.addToList(idReceiver, idItem).then(add => {
+                var hasAdded = add.affectedRows;
 
-                if (hasRemoved != 1) {
-                    throw new Error('Houve um erro ao excluir recomendação!');
+                if (hasAdded != 1) {
+                    throw new Error('Houve um erro ao adicionar item à lista!');
                 }
 
-                response.json(result);
+                recommendationModel.deleteRecommendation(idSender, idItem, idReceiver).then(result => {
+                    var hasRemoved = result.affectedRows;
+
+                    if (hasRemoved != 1) {
+                        throw new Error('Houve um erro ao excluir recomendação!');
+                    }
+
+                    response.json(result);
+                }).catch(error => {
+                    console.log(error);
+                    console.log("\nHouve um erro ao adicionar item à lista! Erro: ", error.sqlMessage);
+                    response.status(500).json(error.sqlMessage);
+                });
+
             }).catch(error => {
                 console.log(error);
                 console.log("\nHouve um erro ao adicionar item à lista! Erro: ", error.sqlMessage);
                 response.status(500).json(error.sqlMessage);
             });
-
         }).catch(error => {
             console.log(error);
-            console.log("\nHouve um erro ao adicionar item à lista! Erro: ", error.sqlMessage);
+            console.log("\nHouve um erro ao verificar se item está na lista! Erro: ", error.sqlMessage);
             response.status(500).json(error.sqlMessage);
         });
     }

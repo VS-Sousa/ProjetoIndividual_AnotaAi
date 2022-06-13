@@ -207,7 +207,7 @@
         var recommendElement = document.createElement('a');
         recommendElement.classList.add('recommend-link');
         recommendElement.innerText = 'Indicar';
-        recommendElement.setAttribute('href', './recommend.html')
+        recommendElement.setAttribute('href', `./recommend.html?idItem=${item.idItem}`)
 
         var removeElement = document.createElement('a');
         removeElement.classList.add('remove-link');

@@ -138,7 +138,9 @@
                     renderItemOptions(data.items);
                     renderSelectedItem();
 
-                    $('.js-example-basic-single').select2();                    
+                    $('.js-example-basic-single').select2();
+                    
+                    setItemAndFriend();
                });
             } else {
                 Swal.fire({
@@ -216,8 +218,8 @@
 
         document.getElementById('liFriendName').innerText = friend.nome;
         document.getElementById('liFriendNickname').innerText = friend.apelido;
-        document.getElementById('liFriendFavoriteType').innerText = friend.tipoPreferido;
-        document.getElementById('liFriendFavoriteGenre').innerText = friend.generoPreferido;
+        document.getElementById('liFriendFavoriteType').innerText = friend.tipoPreferido == null ? 'Não definido' : friend.tipoPreferido;
+        document.getElementById('liFriendFavoriteGenre').innerText = friend.generoPreferido == null ? 'Não definido' : friend.generoPreferido;
     }
 
     function renderSelectedItem() {
@@ -257,6 +259,40 @@
         document.getElementById('h2ItemTitle').innerText = item.titulo;
         document.getElementById('pItemCreator').innerText = item.criador;
         document.getElementById('pItemGenre').innerText = item.genero;
+    }
+
+    function setItemAndFriend() {
+        var params = new URLSearchParams(window.location.search);
+        var hasIdItem = params.get('idItem');
+        var hasIdFriend = params.get('idFriend');
+        
+        if (hasIdItem != null) {
+            var idItem = Number(hasIdItem);
+
+            var validId = data.items.find(i => {
+                if (i.idItem == idItem) {
+                    return i;
+                }
+            });
+
+            if (validId) {
+                $('#cmbItems').val(idItem).change();
+            }
+        }
+
+        if (hasIdFriend != null) {
+            var idFriend = Number(hasIdFriend);
+
+            var validId = data.friends.find(f => {
+                if (f.idAmigo == idFriend) {
+                    return f;
+                }
+            })
+
+            if (validId) {
+                $('#cmbFriends').val(idFriend).change();
+            }
+        }
     }
 
     function handleSendRecommendation() {
